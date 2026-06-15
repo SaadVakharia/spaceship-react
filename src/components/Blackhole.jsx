@@ -2,39 +2,74 @@ import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-export function BlackHole({ position = [-250, 0, 0], scrollProgress = 0 }) {
-  const group = useRef()
+export function BlackHole({
+    position = [-250, 0, 0],
+    scrollProgress = 0,
+}) {
+    const group = useRef()
+    const innerRing = useRef()
+    const outerRing = useRef()
 
-  useFrame((state) => {
-    if (!group.current) return
+    useFrame((_, delta) => {
+        if (!group.current) return
 
-    // Slow rotation
-    group.current.rotation.z += 0.003
+        // rotate effects
+        if (innerRing.current) innerRing.current.rotation.z -= delta * 0.6
+        if (outerRing.current) outerRing.current.rotation.z += delta * 0.2
 
-    // Grow as the user scrolls
-    const scale = 8 + Math.max(0, scrollProgress - 1) * 20
-    group.current.scale.setScalar(scale)
-  })
+        // grow after the ship starts flying
+        const fly = Math.max(0, scrollProgress - 1)
+        const scale = THREE.MathUtils.lerp(
+            2,
+            18,
+            Math.min(fly / 2, 1)
+        )
 
-  return (
-    <group ref={group} position={position}>
-      {/* Dark center */}
-      <mesh>
-        <sphereGeometry args={[1, 64, 64]} />
-        <meshBasicMaterial color="black" />
-      </mesh>
+        group.current.scale.setScalar(scale)
+    })
 
-      {/* Purple glow */}
-      <mesh>
-        <torusGeometry args={[1.4, 0.25, 32, 128]} />
-        <meshBasicMaterial color="#6a00ff" />
-      </mesh>
+    return (
+        <group
+            ref={group}
+            position={position}
+            rotation={[0, Math.PI / 2, 0]}
+        >
+            {/* Event horizon */}
+            <mesh>
+                <sphereGeometry args={[3.2, 64, 64]} />
+                <meshBasicMaterial color="black" />
+            </mesh>
 
-      {/* Blue glow */}
-      <mesh rotation={[0, 0, Math.PI / 4]}>
-        <torusGeometry args={[1.8, 0.12, 32, 128]} />
-        <meshBasicMaterial color="#33bbff" />
-      </mesh>
-    </group>
-  )
+            {/* Blue ring */}
+            <mesh ref={innerRing}>
+                <torusGeometry args={[5.2, 0.45, 32, 256]} />
+                <meshBasicMaterial
+                    color="#3dbdff"
+                    transparent
+                    opacity={0.9}
+                />
+            </mesh>
+
+            {/* Purple outer glow */}
+            <mesh ref={outerRing}>
+                <torusGeometry args={[6.8, 0.9, 32, 256]} />
+                <meshBasicMaterial
+                    color="#7b2cff"
+                    transparent
+                    opacity={0.45}
+                />
+            </mesh>
+
+            {/* Faint halo */}
+            <mesh>
+                <sphereGeometry args={[8.5, 64, 64]} />
+                <meshBasicMaterial
+                    color="#4a00ff"
+                    transparent
+                    opacity={0.08}
+                    side={THREE.BackSide}
+                />
+            </mesh>
+        </group>
+    )
 }

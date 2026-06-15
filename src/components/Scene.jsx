@@ -14,10 +14,6 @@ export function Scene({ scrollProgress = 0 }) {
   const scrollTarget = useRef(0)
   const scrollCurrent = useRef(0)
 
-  // Cache the final camera position once the orbit is complete
-  const lockedCameraPosition = useRef(new THREE.Vector3())
-  const cameraLocked = useRef(false)
-
   useEffect(() => {
     gl.setClearColor('#000000', 1)
   }, [gl])
@@ -31,77 +27,111 @@ export function Scene({ scrollProgress = 0 }) {
   const envMapApplied = useRef(false)
 
   useFrame(() => {
-    // Smooth scrolling
+    // Smooth interpolation
     scrollCurrent.current +=
       (scrollTarget.current - scrollCurrent.current) * 0.05
 
     const scroll = scrollCurrent.current
 
-    // 0 → 1 : orbit
+    // 0 -> 1 : camera orbit
     const orbitProgress = THREE.MathUtils.clamp(scroll, 0, 1)
 
-    // > 1 : fly away
+    // >1 : ship flies
     const flyProgress = Math.max(0, scroll - 1)
 
-    const radius = 12
-    const cameraHeight = 8
+    const isMobile = window.innerWidth < 768
 
-    // Camera orbits around origin
+    const radius = isMobile ? 24 : 12
+    const cameraHeight = isMobile ? 16 : 8
+
+    // Camera rotates around the origin
     const orbitAngle = THREE.MathUtils.lerp(
       Math.PI * 0.65,
       0,
       orbitProgress
     )
 
-    if (!cameraLocked.current) {
+    // Final camera position after orbit
+    const finalCameraX = radius
+    const finalCameraY = cameraHeight
+    const finalCameraZ = 0
+
+    // -----------------------------
+    // CAMERA
+    // -----------------------------
+
+    if (scroll < 1) {
+      // Orbit normally
       camera.position.set(
         Math.cos(orbitAngle) * radius,
         cameraHeight,
         Math.sin(orbitAngle) * radius
       )
-
-      camera.lookAt(0, 0, 0)
-
-      // Lock the camera once orbit finishes
-      if (orbitProgress >= 0.999) {
-        lockedCameraPosition.current.copy(camera.position)
-        cameraLocked.current = true
-      }
     } else {
-      // Freeze camera forever
-      camera.position.copy(lockedCameraPosition.current)
+      // Freeze at final orbit location
+      camera.position.set(
+        finalCameraX,
+        finalCameraY,
+        finalCameraZ
+      )
+
+      // Small camera shake near the black hole
+      const shakeStrength =
+        THREE.MathUtils.smoothstep(flyProgress, 1, 3) * 0.05
+
+      camera.position.x +=
+        (Math.random() - 0.5) * shakeStrength
+
+      camera.position.y +=
+        (Math.random() - 0.5) * shakeStrength
+
+      camera.position.z +=
+        (Math.random() - 0.5) * shakeStrength
     }
 
     // -----------------------------
-    // Ship movement
+    // SPACESHIP
     // -----------------------------
 
-    if (spaceshipRef.current) {
-      if (!cameraLocked.current) {
-        // Stay at origin while camera orbits
-        spaceshipRef.current.position.set(0, 0, 0)
-      } else {
-        // IMPORTANT:
-        // Your model is rotated -90° around Y in Spaceship.jsx,
-        // so its nose points along -X.
-        spaceshipRef.current.position.set(
-          -flyProgress * 30,
-          0,
-          0
-        )
-      }
+    const time = performance.now() * 0.001
 
-      // Keep transform fixed
-      spaceshipRef.current.rotation.set(0, 0, 0)
+    if (spaceshipRef.current) {
+      // Ship movement
+      const shipX = scroll < 1 ? 0 : -flyProgress * 30
+
+      // Idle floating
+      const bobY = Math.sin(time) * 0.05
+      const swayZ = Math.cos(time * 2) * 0.05
+
+      // Optional turbulence near the black hole
+      const turbulence =
+        flyProgress > 1.2
+          ? (Math.random() - 0.5) * 0.02
+          : 0
+
+      spaceshipRef.current.position.set(
+        shipX,
+        bobY + turbulence,
+        swayZ + turbulence
+      )
+
+      // Gentle rocking motion
+      spaceshipRef.current.rotation.set(
+        Math.sin(time * 1.5) * 0.05,
+        0,
+        Math.cos(time * 2.2) * 0.05
+      )
+
       spaceshipRef.current.scale.set(1, 1, 1)
-    }
 
-    // Keep looking at current ship position
-    if (spaceshipRef.current) {
+      // Keep the camera looking at the ship
       camera.lookAt(spaceshipRef.current.position)
     }
 
-    // Generate env map once
+    // -----------------------------
+    // ENV MAP
+    // -----------------------------
+
     if (spaceshipRef.current && !envMapApplied.current) {
       spaceshipRef.current.visible = false
 
@@ -144,8 +174,8 @@ export function Scene({ scrollProgress = 0 }) {
       <Stars />
 
       <BlackHole
-        position={[-250, 0, 0]}
-        scrollProgress={scrollCurrent.current}
+        position={[-60, 0, 0]}
+        scrollProgress={scrollProgress}
       />
     </>
   )
