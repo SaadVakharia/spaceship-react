@@ -4,7 +4,7 @@ import * as THREE from 'three'
 
 import { Spaceship } from './Spaceship'
 import { Stars } from './Stars'
-import { BlackHole } from './BlackHole'
+import { BlackHole } from './Blackhole'
 
 export function Scene({ scrollProgress = 0 }) {
   const { scene, camera, gl } = useThree()
