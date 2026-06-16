@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 
-const STARS_COUNT = 350
+const STARS_COUNT = 250
 const COLORS = ['#fcaa67', '#C75D59', '#ffffc7', '#8CC5C6', '#A5898C']
 
 function r(min, max) {

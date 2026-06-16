@@ -1,5 +1,6 @@
-import { useEffect, useMemo, forwardRef } from 'react'
+import { useEffect, useMemo, useRef, forwardRef } from 'react'
 import { useGLTF, useTexture } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
 // Author: Sousinho – CC-BY-4.0
@@ -9,16 +10,18 @@ export const Spaceship = forwardRef(function Spaceship({ position, rotation }, r
   const { nodes, materials } = useGLTF('/models/spaceship.glb')
   const beamTex = useTexture('/textures/energy-beam-opacity.png')
 
+  const beamRef = useRef()
+
   // alphaFix – matches the original gltf.then() call in spaceship.svelte
   useEffect(() => {
     const fix = (mat) => {
       if (!mat) return
-      mat.transparent      = true
-      mat.alphaToCoverage  = true
-      mat.depthFunc        = THREE.LessEqualDepth
-      mat.depthTest        = true
-      mat.depthWrite       = true
-      mat.needsUpdate      = true
+      mat.transparent = true
+      mat.alphaToCoverage = true
+      mat.depthFunc = THREE.LessEqualDepth
+      mat.depthTest = true
+      mat.depthWrite = true
+      mat.needsUpdate = true
     }
     fix(materials.spaceship_racer)
     fix(materials.cockpit)
@@ -26,16 +29,37 @@ export const Spaceship = forwardRef(function Spaceship({ position, rotation }, r
 
   const beamMat = useMemo(() => {
     const m = new THREE.MeshBasicMaterial({
-      color:         new THREE.Color(1.0, 0.4, 0.02),
-      alphaMap:      beamTex,
-      transparent:   true,
-      blending:      THREE.CustomBlending,
-      blendDst:      THREE.OneFactor,
+      color: new THREE.Color(1.0, 0.4, 0.02),
+      alphaMap: beamTex,
+      transparent: true,
+      blending: THREE.CustomBlending,
+      blendDst: THREE.OneFactor,
       blendEquation: THREE.AddEquation,
-      side:          THREE.DoubleSide,
+      side: THREE.DoubleSide,
     })
     return m
   }, [beamTex])
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime
+
+    if (beamRef.current) {
+      // Flicker
+      beamRef.current.scale.y =
+        1 + Math.sin(t * 35) * 0.08
+
+      // Tiny width change
+      beamRef.current.scale.x =
+        1 + Math.sin(t * 20) * 0.02
+
+      beamRef.current.scale.z =
+        1 + Math.cos(t * 20) * 0.02
+    }
+
+    // Pulse brightness
+    beamMat.opacity =
+      0.75 + Math.sin(t * 30) * 0.2
+  })
 
   return (
     <group ref={ref} position={position} rotation={rotation} dispose={false}>
@@ -129,11 +153,29 @@ export const Spaceship = forwardRef(function Spaceship({ position, rotation }, r
           rotation={[0.17, 0, 0]}
         />
 
-        {/* energy beam – position/rotation match the original */}
-        <mesh position={[740, -60, -1350]} rotation={[Math.PI * 0.5, 0, 0]}>
+        {/* energy beam */}
+        <mesh
+          ref={beamRef}
+          position={[740, -60, -1350]}
+          rotation={[Math.PI * 0.5, 0, 0]}
+        >
           <cylinderGeometry args={[70, 25, 1600, 15]} />
           <primitive object={beamMat} attach="material" />
         </mesh>
+
+        <pointLight
+          position={[740, -60, -1180]}
+          intensity={2}
+          color="#4fc3ff"
+          distance={600}
+        />
+
+        <pointLight
+          position={[740, -60, -1450]}
+          intensity={1}
+          color="#7b68ff"
+          distance={900}
+        />
       </group>
     </group>
   )

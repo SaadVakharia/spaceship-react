@@ -1,75 +1,41 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
 export function BlackHole({
-    position = [-250, 0, 0],
-    scrollProgress = 0,
+  position = [-60, 0, 0],
+  scrollProgress = 0,
 }) {
-    const group = useRef()
-    const innerRing = useRef()
-    const outerRing = useRef()
+  const group    = useRef()
+  const { scene } = useGLTF('/models/blackhole.glb')
 
-    useFrame((_, delta) => {
-        if (!group.current) return
+  useFrame((state, delta) => {
+    if (!group.current) return
 
-        // rotate effects
-        if (innerRing.current) innerRing.current.rotation.z -= delta * 0.6
-        if (outerRing.current) outerRing.current.rotation.z += delta * 0.2
+    const fly = Math.max(0, scrollProgress - 1)
 
-        // grow after the ship starts flying
-        const fly = Math.max(0, scrollProgress - 1)
-        const scale = THREE.MathUtils.lerp(
-            2,
-            18,
-            Math.min(fly / 2, 1)
-        )
+    // Grow as ship approaches
+    const scale = THREE.MathUtils.lerp(0.8, 8, Math.min(fly / 2.5, 1))
+    group.current.scale.setScalar(scale)
 
-        group.current.scale.setScalar(scale)
-    })
+    // Slow rotation
+    group.current.rotation.x += delta * 0.2
 
-    return (
-        <group
-            ref={group}
-            position={position}
-            rotation={[0, Math.PI / 2, 0]}
-        >
-            {/* Event horizon */}
-            <mesh>
-                <sphereGeometry args={[3.2, 64, 64]} />
-                <meshBasicMaterial color="black" />
-            </mesh>
+    // Gentle breathing
+    const pulse = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.03
+    group.current.scale.multiplyScalar(pulse)
+  })
 
-            {/* Blue ring */}
-            <mesh ref={innerRing}>
-                <torusGeometry args={[5.2, 0.45, 32, 256]} />
-                <meshBasicMaterial
-                    color="#3dbdff"
-                    transparent
-                    opacity={0.9}
-                />
-            </mesh>
-
-            {/* Purple outer glow */}
-            <mesh ref={outerRing}>
-                <torusGeometry args={[6.8, 0.9, 32, 256]} />
-                <meshBasicMaterial
-                    color="#7b2cff"
-                    transparent
-                    opacity={0.45}
-                />
-            </mesh>
-
-            {/* Faint halo */}
-            <mesh>
-                <sphereGeometry args={[8.5, 64, 64]} />
-                <meshBasicMaterial
-                    color="#4a00ff"
-                    transparent
-                    opacity={0.08}
-                    side={THREE.BackSide}
-                />
-            </mesh>
-        </group>
-    )
+  return (
+    <group
+      ref={group}
+      position={position}
+      rotation={[0, 0, -90]}
+    >
+      <primitive object={scene.clone()} />
+    </group>
+  )
 }
+
+useGLTF.preload('/models/blackhole.glb')
