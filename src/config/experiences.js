@@ -1,0 +1,38 @@
+export const EXPERIENCES = [
+  {
+    id: 'playstation',
+    title: 'PLAYSTATION',
+    subtitle: 'Latest consoles & exclusive titles',
+    color: '#003791',
+    glow: '#4d9fff',
+    ring: false,
+    position: [0, 0, 0],
+  },
+  {
+    id: 'driving',
+    title: 'DRIVING SIMULATORS',
+    subtitle: 'Full rig setup — wheel, pedals & motion',
+    color: '#c2410c',
+    glow: '#fb923c',
+    ring: true,
+    position: [0, 0, -18],
+  },
+  {
+    id: 'vr',
+    title: 'VR ZONE',
+    subtitle: 'Immersive virtual reality experiences',
+    color: '#6d28d9',
+    glow: '#c4b5fd',
+    ring: false,
+    position: [0, 0, -36],
+  },
+  {
+    id: 'pc',
+    title: 'PC GAMING',
+    subtitle: 'High-spec rigs for competitive play',
+    color: '#047857',
+    glow: '#6ee7b7',
+    ring: false,
+    position: [0, 0, -54],
+  },
+]

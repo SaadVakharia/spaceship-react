@@ -6,41 +6,42 @@ import * as THREE from 'three'
 const STARS_COUNT = 250
 const COLORS = ['#fcaa67', '#C75D59', '#ffffc7', '#8CC5C6', '#A5898C']
 
-function r(min, max) {
+function randomBetween(min, max) {
   return min + Math.random() * (max - min)
 }
 
 function resetStar(star) {
-  if (r(0, 1) > 0.8) {
-    star.pos.set(r(-10, -30), r(-5, 5), r(6, -6))
-    star.len = r(1.5, 15)
+  if (randomBetween(0, 1) > 0.8) {
+    star.pos.set(randomBetween(-10, -30), randomBetween(-5, 5), randomBetween(6, -6))
+    star.len = randomBetween(1.5, 15)
   } else {
-    star.pos.set(r(-15, -45), r(-10.5, 1.5), r(30, -45))
-    star.len = r(2.5, 20)
+    star.pos.set(randomBetween(-15, -45), randomBetween(-10.5, 1.5), randomBetween(30, -45))
+    star.len = randomBetween(2.5, 20)
   }
-  star.speed = r(19.5, 42)
+
+  star.speed = randomBetween(19.5, 42)
   star.color
     .set(COLORS[Math.floor(Math.random() * COLORS.length)])
     .convertSRGBToLinear()
     .multiplyScalar(1.3)
+
   return star
 }
 
 function makeStar() {
-  const star = {
-    pos:   new THREE.Vector3(),
-    len:   0,
+  return resetStar({
+    pos: new THREE.Vector3(),
+    len: 0,
     speed: 0,
     color: new THREE.Color(),
-  }
-  return resetStar(star)
+  })
 }
 
 export function Stars() {
-  const meshRef  = useRef()
-  const starTex  = useTexture('/textures/star.png')
-  const stars    = useMemo(() => Array.from({ length: STARS_COUNT }, makeStar), [])
-  const dummy    = useMemo(() => new THREE.Object3D(), [])
+  const meshRef = useRef()
+  const starTex = useTexture('/textures/star.png')
+  const stars = useMemo(() => Array.from({ length: STARS_COUNT }, makeStar), [])
+  const dummy = useMemo(() => new THREE.Object3D(), [])
 
   useFrame((_, delta) => {
     const mesh = meshRef.current
@@ -49,6 +50,7 @@ export function Stars() {
     for (let i = 0; i < stars.length; i++) {
       const star = stars[i]
       star.pos.x += star.speed * delta
+
       if (star.pos.x > 40) resetStar(star)
 
       dummy.position.copy(star.pos)

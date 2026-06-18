@@ -1,0 +1,68 @@
+.planet-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+  padding: 2rem;
+  text-align: center;
+}
+
+.planet-overlay__content {
+  max-width: 720px;
+  transition: opacity 0.15s linear, transform 0.15s linear;
+}
+
+.planet-overlay__label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: var(--tracking-wider);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.planet-overlay__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4.5vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  line-height: 1.35;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.planet-overlay__subtitle {
+  font-family: var(--font-display);
+  font-size: clamp(0.65rem, 1.4vw, 0.85rem);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  line-height: 1.8;
+}
+
+.experience-progress {
+  position: absolute;
+  bottom: 2.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.experience-progress__dot {
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.25);
+  width: 6px;
+  transition: all 0.3s ease;
+}
+
+.experience-progress__dot--active {
+  width: 24px;
+  background: #fff;
+}
