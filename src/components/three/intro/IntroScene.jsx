@@ -1,7 +1,6 @@
 import { useRef } from 'react'
 import { Spaceship } from './Spaceship'
 import { BlackHole } from './BlackHole'
-import { Stars } from '../environment/Stars'
 import { useIntroAnimation } from './useIntroAnimation'
 
 export function IntroScene({ scrollProgress }) {
@@ -20,7 +19,6 @@ export function IntroScene({ scrollProgress }) {
       />
 
       <Spaceship ref={spaceshipRef} />
-      <Stars />
 
       <BlackHole position={[-60, 0, 0]} scrollProgress={scrollProgress} />
     </group>

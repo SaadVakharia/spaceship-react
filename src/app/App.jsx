@@ -24,7 +24,9 @@ export default function App() {
         <HeroOverlay opacity={getHeroOpacity(scrollProgress)} />
       )}
 
-      <GameCanvas scrollProgress={scrollProgress} />
+      {scrollProgress < 3.4 && (
+        <GameCanvas scrollProgress={scrollProgress} />
+      )}
 
       <BlackOverlay opacity={getBlackOverlayOpacity(scrollProgress)} />
       <PlanetOverlay scrollProgress={scrollProgress} />

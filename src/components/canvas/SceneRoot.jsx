@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
 import { useThree } from '@react-three/fiber'
 import { Nebula } from '../three/environment/Nebula'
+import { Stars } from '../three/environment/Stars'
 import { IntroScene } from '../three/intro/IntroScene'
-import { PlanetsScene } from '../three/planets/PlanetsScene'
-import { PLANETS_START } from '../../config/scroll'
 
 export function SceneRoot({ scrollProgress = 0 }) {
   const { gl } = useThree()
@@ -12,13 +11,11 @@ export function SceneRoot({ scrollProgress = 0 }) {
     gl.setClearColor('#000000', 1)
   }, [gl])
 
-  const showPlanets = scrollProgress >= PLANETS_START - 0.3
-
   return (
     <>
       <Nebula />
+      <Stars />
       <IntroScene scrollProgress={scrollProgress} />
-      <PlanetsScene scrollProgress={scrollProgress} visible={showPlanets} />
     </>
   )
 }
