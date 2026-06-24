@@ -12,8 +12,30 @@ export const Spaceship = forwardRef(function Spaceship({ position, rotation }, r
   const beamRef = useRef()
 
   useEffect(() => {
-    const fixMaterial = (material) => {
+    const fixMaterial = (material, isMainBody = false) => {
       if (!material) return
+
+      // If it's the main body, we want to make the orange parts white but KEEP the black parts.
+      // We do this by injecting a tiny custom shader that desaturates the texture at runtime!
+      if (isMainBody) {
+        material.onBeforeCompile = (shader) => {
+          shader.fragmentShader = shader.fragmentShader.replace(
+            '#include <map_fragment>',
+            `
+            #include <map_fragment>
+            
+            // Convert the texture colors to grayscale
+            float luminance = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
+            
+            // Boost the brightness so the gray becomes a bright white, but true black stays dark
+            vec3 whitish = vec3(luminance) * 2.4;
+            
+            // Add a tiny bit of blue tint for a sleek "cool white" sci-fi look
+            diffuseColor.rgb = whitish * vec3(0.95, 0.98, 1.05);
+            `
+          )
+        }
+      }
 
       material.transparent = true
       material.alphaToCoverage = true
@@ -23,8 +45,8 @@ export const Spaceship = forwardRef(function Spaceship({ position, rotation }, r
       material.needsUpdate = true
     }
 
-    fixMaterial(materials.spaceship_racer)
-    fixMaterial(materials.cockpit)
+    fixMaterial(materials.spaceship_racer, true)
+    fixMaterial(materials.cockpit, false)
   }, [materials])
 
   const beamMaterial = useMemo(() => {
