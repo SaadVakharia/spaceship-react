@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { MAX_SCROLL, SCROLL_SENSITIVITY } from '../config/scroll'
+import { MAX_SCROLL, PLANETS_START, SCROLL_SENSITIVITY } from '../config/scroll'
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value))
@@ -9,6 +9,14 @@ export function useScrollProgress() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const targetScroll = useRef(0)
   const snapTimeout = useRef(null)
+  const gateLocked = useRef(false) // once true, can't scroll back below PLANETS_START
+
+  const scrollTo = (value) => {
+    if (snapTimeout.current) clearTimeout(snapTimeout.current)
+    const minScroll = gateLocked.current ? PLANETS_START : 0
+    targetScroll.current = clamp(value, minScroll, MAX_SCROLL)
+    if (value >= PLANETS_START) gateLocked.current = true
+  }
 
   useEffect(() => {
     let touchStartY = 0
@@ -27,10 +35,10 @@ export function useScrollProgress() {
 
     const triggerSnap = () => {
       const currentTarget = targetScroll.current
-      if (currentTarget >= 3.2 && currentTarget <= 8.5) {
-        // Panels are at 3.5, 4.5, 5.5, 6.5, 7.5
+      if (currentTarget >= 3.2 && currentTarget <= 9.0) {
+        // Panels are at 3.5, 4.5, 5.5, 6.5, 7.5, 8.5
         let nearestPanel = Math.round(currentTarget - 0.5) + 0.5
-        nearestPanel = clamp(nearestPanel, 3.5, 7.5) // snap to branding or planet screens
+        nearestPanel = clamp(nearestPanel, 3.5, 8.5) // snap to branding, planet, or contact screens
         targetScroll.current = nearestPanel
       }
     }
@@ -39,7 +47,13 @@ export function useScrollProgress() {
       // Clear snap timeout while actively scrolling
       if (snapTimeout.current) clearTimeout(snapTimeout.current)
 
-      targetScroll.current = clamp(targetScroll.current + delta, 0, MAX_SCROLL)
+      const minScroll = gateLocked.current ? PLANETS_START : 0
+      targetScroll.current = clamp(targetScroll.current + delta, minScroll, MAX_SCROLL)
+
+      // Lock the gate once we've reached the 2D zone
+      if (targetScroll.current >= PLANETS_START) {
+        gateLocked.current = true
+      }
 
       // Set snap timeout to trigger when scroll stops (250ms delay)
       snapTimeout.current = setTimeout(() => {
@@ -78,5 +92,5 @@ export function useScrollProgress() {
     }
   }, [])
 
-  return scrollProgress
+  return { scrollProgress, scrollTo }
 }

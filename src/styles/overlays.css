@@ -19,11 +19,13 @@
   height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
   align-items: center;
   justify-items: center;
-  padding: 0 10vw;
+  padding: 0 4vw;
   box-sizing: border-box;
   pointer-events: none;
+  overflow: hidden;
 }
 
 /* Planet visual (Vertically fixed, fades/scales in place) */
@@ -33,6 +35,8 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  min-height: 0;
+  min-width: 0;
 }
 
 /* Text Content Container (Translates vertically and fades) */
@@ -40,29 +44,44 @@
   transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s linear;
   display: flex;
   flex-direction: column;
+  max-height: 65vh;
+  overflow: hidden;
 }
 
-/* Alternating Layout Configurations */
-.planet-section--left .planet-section__visual {
+/* Layout: --left  → planet col 1, text col 2 */
+/* Layout: --right → planet col 2, text col 1 */
+
+.planet-section--left .planet-section__visual,
+.planet-section--branding .planet-section__visual {
   grid-column: 1;
+  grid-row: 1;
 }
 
-.planet-section--left .planet-section__content {
+.planet-section--left .planet-section__content,
+.planet-section--branding .planet-section__content {
   grid-column: 2;
+  grid-row: 1;
   text-align: left;
   align-self: center;
   justify-self: start;
 }
 
+.planet-section--right .planet-section__visual {
+  grid-column: 2;
+  grid-row: 1;
+}
+
 .planet-section--right .planet-section__content {
   grid-column: 1;
+  grid-row: 1;
   text-align: right;
   align-self: center;
   justify-self: end;
 }
 
-.planet-section--right .planet-section__visual {
-  grid-column: 2;
+/* Reverse feature-dot order for right-aligned content */
+.planet-section--right .planet-section__feature-item {
+  flex-direction: row-reverse;
 }
 
 /* Content Text Styling */
@@ -100,12 +119,11 @@
 }
 
 .planet-section__description {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-body);
   font-size: clamp(0.72rem, 1.2vw, 0.85rem);
   font-weight: 300;
   line-height: 1.8;
   color: var(--color-muted);
-  max-width: 500px;
   margin-bottom: 1.75rem;
   letter-spacing: 0.02em;
 }
@@ -136,22 +154,7 @@
   flex-shrink: 0;
 }
 
-/* Adjust layout alignment for details list */
-.planet-section--right .planet-section__feature-item {
-  flex-direction: row-reverse;
-}
 
-/* Branding Screen Styling */
-.planet-section--branding .planet-section__visual {
-  grid-column: 1;
-}
-
-.planet-section--branding .planet-section__content {
-  grid-column: 2;
-  text-align: left;
-  align-self: center;
-  justify-self: start;
-}
 
 .branding-title {
   font-family: var(--font-display);
@@ -174,7 +177,7 @@
 }
 
 .branding-description {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-body);
   font-size: clamp(0.75rem, 1.25vw, 0.9rem);
   font-weight: 300;
   line-height: 1.8;
@@ -225,6 +228,8 @@
   position: relative;
   width: clamp(340px, 36vw, 520px);
   height: clamp(340px, 36vw, 520px);
+  max-width: 75vh;
+  max-height: 75vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -240,34 +245,6 @@
   z-index: 2;
 }
 
-.planet-atmosphere {
-  position: absolute;
-  inset: -20px;
-  border-radius: 50%;
-  background: var(--glow-color);
-  filter: blur(40px);
-  opacity: 0.26;
-  z-index: 1;
-  animation: breathe-glow 6s ease-in-out infinite alternate;
-}
-
-.planet-shading {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at 25% 25%, transparent 15%, rgba(0, 0, 0, 0.95) 85%);
-  pointer-events: none;
-  z-index: 4;
-}
-
-.planet-highlight {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at 22% 22%, rgba(255, 255, 255, 0.3) 0%, transparent 45%);
-  pointer-events: none;
-  z-index: 5;
-}
 
 .planet-texture {
   position: absolute;
@@ -280,41 +257,13 @@
   animation: rotate-slow 50s linear infinite;
 }
 
-.planet-svg {
-  width: 100%;
-  height: 100%;
-}
-
-/* Planet Rings (Driving Simulator specific) */
-.planet-ring {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 155%;
-  height: 38%;
-  border: 6px solid var(--ring-color);
-  border-radius: 50%;
-  box-shadow: 0 0 30px var(--ring-color), inset 0 0 30px var(--ring-color);
-  transform: translate(-50%, -50%) rotate(-12deg);
-  opacity: 0.8;
-  pointer-events: none;
-}
-
-.planet-ring--back {
-  z-index: 1;
-  clip-path: inset(0 0 50% 0); /* Display top half behind */
-}
-
-.planet-ring--front {
-  z-index: 3;
-  clip-path: inset(50% 0 0 0); /* Display bottom half in front */
-}
 
 /* Animations */
 @keyframes rotate-slow {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -324,6 +273,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -335,6 +285,7 @@
     transform: scale(0.95);
     filter: blur(20px);
   }
+
   100% {
     opacity: 0.85;
     transform: scale(1.05);
@@ -342,18 +293,7 @@
   }
 }
 
-@keyframes breathe-glow {
-  0% {
-    opacity: 0.22;
-    filter: blur(28px);
-    transform: scale(0.97);
-  }
-  100% {
-    opacity: 0.35;
-    filter: blur(38px);
-    transform: scale(1.03);
-  }
-}
+
 
 /* Experience Progress Indicator */
 .experience-progress {
@@ -410,7 +350,7 @@
   .planet-section--right .planet-section__feature-item {
     flex-direction: row;
   }
-  
+
   .planet-section__feature-item {
     justify-content: center;
   }

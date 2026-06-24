@@ -1,48 +1,22 @@
 import { EXPERIENCES } from '../../config/experiences'
 import { PLANETS_START } from '../../config/scroll'
-import { ExperienceProgress } from './ExperienceProgress'
 import '../../styles/overlays.css'
 
-function Planet2D({ id, color, glow }) {
+function Planet2D({ id }) {
   const textureUrl = `/textures/${id}_planet.png`
-
-  if (id === 'driving') {
-    return (
-      <div className="planet-sphere-container">
-        <div className="planet-atmosphere" style={{ '--glow-color': glow }} />
-        
-        {/* Back Ring: clipped to show top half behind planet */}
-        <div className="planet-ring planet-ring--back" style={{ '--ring-color': glow }} />
-        
-        <div className="planet-sphere">
-          <div 
-            className="planet-texture" 
-            style={{ backgroundImage: `url(${textureUrl})` }} 
-          />
-          <div className="planet-shading" />
-          <div className="planet-highlight" />
-        </div>
-        
-        {/* Front Ring: clipped to show bottom half in front of planet */}
-        <div className="planet-ring planet-ring--front" style={{ '--ring-color': glow }} />
-      </div>
-    )
-  }
 
   return (
     <div className="planet-sphere-container">
-      <div className="planet-atmosphere" style={{ '--glow-color': glow }} />
       <div className="planet-sphere">
-        <div 
-          className="planet-texture" 
-          style={{ backgroundImage: `url(${textureUrl})` }} 
+        <div
+          className="planet-texture"
+          style={{ backgroundImage: `url(${textureUrl})` }}
         />
-        <div className="planet-shading" />
-        <div className="planet-highlight" />
       </div>
     </div>
   )
 }
+
 
 export function PlanetOverlay({ scrollProgress }) {
   const visible = scrollProgress >= PLANETS_START - 0.2
@@ -112,8 +86,7 @@ export function PlanetOverlay({ scrollProgress }) {
 
         if (opacity <= 0.001) return null
 
-        const isEven = index % 2 === 0
-        const layoutClass = isEven ? 'planet-section--left' : 'planet-section--right'
+        const layoutClass = index % 2 === 0 ? 'planet-section--right' : 'planet-section--left'
 
         return (
           <div
@@ -127,11 +100,7 @@ export function PlanetOverlay({ scrollProgress }) {
                 opacity, // fades in place
               }}
             >
-              <Planet2D
-                id={experience.id}
-                color={experience.color}
-                glow={experience.glow}
-              />
+              <Planet2D id={experience.id} />
             </div>
 
             <div 
@@ -168,10 +137,6 @@ export function PlanetOverlay({ scrollProgress }) {
         )
       })}
 
-      {/* Experience indicators: hide during the intro/branding screen */}
-      {scrollProgress >= 4.0 && (
-        <ExperienceProgress activeIndex={activePlanetIndex} />
-      )}
     </div>
   )
 }
