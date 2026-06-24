@@ -323,8 +323,8 @@
   .planet-section {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;
-    gap: 2rem;
-    padding: 0 2rem;
+    gap: 1.5rem;
+    padding: 5.5rem 1.5rem 4.5rem; /* Clear header and footer */
     align-content: center;
   }
 
@@ -342,8 +342,6 @@
     grid-row: 2;
     text-align: center;
     justify-self: center;
-    /* Translate mobile content since mobile displays stack them */
-    transform: none !important;
   }
 
   /* Force details alignment to center on mobile */
@@ -357,8 +355,8 @@
 
   .planet-sphere-container,
   .branding-portal-container {
-    width: clamp(180px, 46vw, 260px);
-    height: clamp(180px, 46vw, 260px);
+    width: clamp(140px, 40vw, 220px);
+    height: clamp(140px, 40vw, 220px);
   }
 
   .planet-section__title,

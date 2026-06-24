@@ -12,7 +12,7 @@ export const SCROLL_SENSITIVITY = {
 export const BLACK_OVERLAY = {
   fadeInStart: 2.8,
   fadeInDuration: 0.4,
-  fadeOutDuration: 0.35,
+  fadeOutDuration: 0.8,
 }
 
 export const HERO = {
@@ -21,6 +21,6 @@ export const HERO = {
 }
 
 export const SCROLL_HINT = {
-  hideAfter: 0.08,
+  hideAfter: 3.5,
   delayMs: 1200,
 }

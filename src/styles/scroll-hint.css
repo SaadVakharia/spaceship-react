@@ -19,6 +19,7 @@
   letter-spacing: var(--tracking-wider);
   color: var(--color-muted);
   text-transform: uppercase;
+  text-align: center;
 }
 
 .scroll-hint__track {

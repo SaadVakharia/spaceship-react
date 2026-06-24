@@ -11,8 +11,11 @@ import { GameCanvas } from '../components/canvas/GameCanvas'
 import { HeroOverlay } from '../components/overlay/HeroOverlay'
 import { BlackOverlay } from '../components/overlay/BlackOverlay'
 import { PlanetOverlay } from '../components/overlay/PlanetOverlay'
+import { Starfield } from '../components/overlay/Starfield'
 import { ContactOverlay } from '../components/overlay/ContactOverlay'
 import { ScrollHint } from '../components/overlay/ScrollHint'
+import { BoostButton } from '../components/overlay/BoostButton'
+import { Scrollbar } from '../components/overlay/Scrollbar'
 import { FooterBar } from '../components/layout/FooterBar'
 
 export default function App() {
@@ -31,9 +34,12 @@ export default function App() {
       )}
 
       <BlackOverlay opacity={getBlackOverlayOpacity(scrollProgress)} />
+      <Starfield scrollProgress={scrollProgress} />
       <PlanetOverlay scrollProgress={scrollProgress} />
       <ContactOverlay scrollProgress={scrollProgress} />
-      <ScrollHint visible={shouldShowScrollHint(scrollProgress)} />
+      <ScrollHint scrollProgress={scrollProgress} />
+      <BoostButton scrollProgress={scrollProgress} scrollTo={scrollTo} />
+      <Scrollbar scrollProgress={scrollProgress} />
       <FooterBar scrollProgress={scrollProgress} />
     </AppShell>
   )

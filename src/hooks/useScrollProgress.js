@@ -27,7 +27,9 @@ export function useScrollProgress() {
       setScrollProgress((current) => {
         const diff = targetScroll.current - current
         if (Math.abs(diff) < 0.0005) return targetScroll.current
-        return current + diff * 0.065 // Smooth interpolation factor
+
+        const lerpFactor = current >= PLANETS_START ? 0.12 : 0.025
+        return current + diff * lerpFactor
       })
       animationFrameId = requestAnimationFrame(loop)
     }
@@ -55,13 +57,28 @@ export function useScrollProgress() {
         gateLocked.current = true
       }
 
-      // Set snap timeout to trigger when scroll stops (250ms delay)
+      // Set snap timeout to trigger when scroll stops (reduce to 100ms for faster sync)
       snapTimeout.current = setTimeout(() => {
         triggerSnap()
-      }, 250)
+      }, 100)
+    }
+
+    const isScrollableScrollEvent = (event, deltaY) => {
+      const scrollable = event.target.closest('.contact-inner')
+      if (!scrollable) return false
+
+      const isAtTop = scrollable.scrollTop <= 0
+      const isAtBottom = Math.abs(scrollable.scrollHeight - scrollable.clientHeight - scrollable.scrollTop) < 1
+
+      if (deltaY < 0 && !isAtTop) return true // native scroll up
+      if (deltaY > 0 && !isAtBottom) return true // native scroll down
+
+      return false
     }
 
     const onWheel = (event) => {
+      if (isScrollableScrollEvent(event, event.deltaY)) return
+
       event.preventDefault()
       onScrollActivity(event.deltaY * SCROLL_SENSITIVITY.wheel)
     }
@@ -75,6 +92,9 @@ export function useScrollProgress() {
       const currentY = event.touches[0].clientY
       const delta = touchStartY - currentY
       touchStartY = currentY
+
+      if (isScrollableScrollEvent(event, delta)) return
+
       onScrollActivity(delta * SCROLL_SENSITIVITY.touch)
       event.preventDefault()
     }

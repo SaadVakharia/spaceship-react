@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 import { CONTACT_AT } from '../../config/scroll'
 import '../../styles/contact.css'
 
@@ -60,7 +61,7 @@ export function ContactOverlay({ scrollProgress }) {
 
           <div className="contact-details">
             <div className="contact-detail-item">
-              <span className="contact-detail-icon">📍</span>
+              <span className="contact-detail-icon"><MapPin size={18} strokeWidth={1.5} /></span>
               <a
                 href="https://maps.app.goo.gl/wcyzCkLW1Fjf8gE6A"
                 target="_blank"
@@ -72,19 +73,19 @@ export function ContactOverlay({ scrollProgress }) {
               </a>
             </div>
             <div className="contact-detail-item">
-              <span className="contact-detail-icon">📞</span>
+              <span className="contact-detail-icon"><Phone size={18} strokeWidth={1.5} /></span>
               <a href="tel:+919167862341" className="contact-detail-link">
                 +91 91678 62341
               </a>
             </div>
             <div className="contact-detail-item">
-              <span className="contact-detail-icon">✉️</span>
+              <span className="contact-detail-icon"><Mail size={18} strokeWidth={1.5} /></span>
               <a href="mailto:escapegamingbandra@gmail.com" className="contact-detail-link">
                 escapegamingbandra@gmail.com
               </a>
             </div>
             <div className="contact-detail-item">
-              <span className="contact-detail-icon">🕐</span>
+              <span className="contact-detail-icon"><Clock size={18} strokeWidth={1.5} /></span>
               <span>Open Daily · 10 AM – 11 PM</span>
             </div>
           </div>

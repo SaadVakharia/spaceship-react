@@ -1,0 +1,82 @@
+.boost-button {
+  position: fixed;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: rgba(20, 15, 35, 0.4);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 50px;
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  animation: boost-glow-pulse 2.5s infinite ease-in-out alternate;
+}
+
+@keyframes boost-glow-pulse {
+  0% {
+    box-shadow: 0 0 5px rgba(167, 139, 250, 0.2);
+  }
+
+  100% {
+    box-shadow: 0 0 18px rgba(167, 139, 250, 0.6);
+  }
+}
+
+.boost-button:hover {
+  background: rgba(167, 139, 250, 0.15);
+  border-color: rgba(167, 139, 250, 0.8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(167, 139, 250, 0.2);
+}
+
+.boost-button__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.boost-button__label {
+  white-space: nowrap;
+}
+
+.boost-button__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(167, 139, 250, 0.4) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.boost-button:hover .boost-button__glow {
+  opacity: 1;
+}
+
+@media (max-width: 767px) {
+  .boost-button {
+    bottom: 10rem;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.55rem 1rem;
+  }
+
+  .boost-button:hover {
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  .boost-button__label {
+    font-size: 0.65rem;
+  }
+}

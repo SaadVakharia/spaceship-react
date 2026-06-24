@@ -30,20 +30,22 @@ export function PlanetOverlay({ scrollProgress }) {
   // Branding Offset calculations
   const brandingOffset = scrollProgress - 3.5
   const brandingTranslateY = -brandingOffset * 100
-  const brandingOpacity = Math.max(0, 1 - Math.abs(brandingOffset) * 1.2)
+  // Use a slow fade-in (0.7) but a fast fade-out (1.5) so it doesn't bleed into Experience 1
+  const brandingOpacityMultiplier = brandingOffset < 0 ? 0.7 : 1.5
+  const brandingOpacity = Math.max(0, 1 - Math.abs(brandingOffset) * brandingOpacityMultiplier)
   const brandingScale = 1 - Math.min(0.5, Math.abs(brandingOffset) * 0.5)
 
   return (
     <div className="planet-overlay-2d">
-      
+
       {/* Branding Section */}
       {brandingOpacity > 0.001 && (
         <div
           className="planet-section planet-section--branding"
         >
-          <div 
+          <div
             className="planet-section__visual"
-            style={{ 
+            style={{
               transform: `scale(${brandingScale})`,
               opacity: brandingOpacity,
             }}
@@ -60,7 +62,7 @@ export function PlanetOverlay({ scrollProgress }) {
             </div>
           </div>
 
-          <div 
+          <div
             className="planet-section__content"
             style={{
               transform: `translateY(${brandingTranslateY}vh)`,
@@ -71,7 +73,7 @@ export function PlanetOverlay({ scrollProgress }) {
             <h1 className="branding-title">ESCAPE GAMING</h1>
             <p className="branding-subtitle">THE BEST GAMING ZONE IN BANDRA</p>
             <p className="branding-description">
-              Step in to the world of extreme gaming at Escape Gaming Zone in Bandra, home to the best PS5 gaming and VR lounges in Mumbai. For both casual and serious gamers, we’ve got what it takes to elevate your play. Scroll down to explore our sectors.
+              Step in to the world of extreme gaming at Escape Gaming Zone in Bandra, home to the best PS5 gaming and VR lounges in Mumbai. For both casual and serious gamers, we’ve got what it takes to elevate your play.
             </p>
           </div>
         </div>
@@ -83,6 +85,15 @@ export function PlanetOverlay({ scrollProgress }) {
         const translateY = -offset * 100
         const opacity = Math.max(0, 1 - Math.abs(offset) * 1.2)
         const scale = 1 - Math.min(0.5, Math.abs(offset) * 0.5)
+        
+        // Add dynamic rotation so the planet revolves into place
+        const rotate = offset * -60
+        
+        // Add horizontal swing so it flies in from the side
+        const translateX = offset * 25 // 25vw side-to-side movement
+        
+        // Add a cinematic depth-of-field blur effect
+        const blur = Math.abs(offset) * 15
 
         if (opacity <= 0.001) return null
 
@@ -93,17 +104,18 @@ export function PlanetOverlay({ scrollProgress }) {
             key={experience.id}
             className={`planet-section ${layoutClass}`}
           >
-            <div 
+            <div
               className="planet-section__visual"
-              style={{ 
-                transform: `scale(${scale})`,
-                opacity, // fades in place
+              style={{
+                transform: `translateX(${translateX}vw) scale(${scale}) rotate(${rotate}deg)`,
+                opacity,
+                filter: `blur(${blur}px)`,
               }}
             >
               <Planet2D id={experience.id} />
             </div>
 
-            <div 
+            <div
               className="planet-section__content"
               style={{
                 transform: `translateY(${translateY}vh)`, // translates vertically
@@ -117,16 +129,16 @@ export function PlanetOverlay({ scrollProgress }) {
               <h2 className="planet-section__title">{experience.title}</h2>
               <p className="planet-section__subtitle">{experience.subtitle}</p>
               <p className="planet-section__description">{experience.description}</p>
-              
+
               <ul className="planet-section__features">
                 {experience.features.map((feature, fIdx) => (
                   <li key={fIdx} className="planet-section__feature-item">
-                    <span 
-                      className="feature-dot" 
-                      style={{ 
+                    <span
+                      className="feature-dot"
+                      style={{
                         backgroundColor: experience.glow,
-                        boxShadow: `0 0 8px ${experience.glow}` 
-                      }} 
+                        boxShadow: `0 0 8px ${experience.glow}`
+                      }}
                     />
                     {feature}
                   </li>
