@@ -147,7 +147,6 @@
   transition: border-color 0.2s ease, background 0.2s ease;
   width: 100%;
   box-sizing: border-box;
-  -webkit-appearance: none;
 }
 
 .contact-field__input::placeholder {
@@ -166,6 +165,9 @@
   background-repeat: no-repeat;
   background-position: right 0.9rem center;
   padding-right: 2.5rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 .contact-field__select option {
