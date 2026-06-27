@@ -52,12 +52,8 @@ export function PlanetOverlay({ scrollProgress }) {
           >
             <div className="branding-portal-container">
               <div className="branding-portal-glow" />
-              <div className="branding-portal">
-                <svg className="portal-svg" viewBox="0 0 100 100">
-                  <polygon points="50,18 78,74 22,74" fill="none" stroke="var(--color-accent)" strokeWidth="2.5" strokeLinejoin="round" />
-                  <polygon points="50,30 68,69 32,69" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeLinejoin="round" strokeDasharray="3 3" />
-                  <circle cx="50" cy="54" r="11" fill="none" stroke="#fff" strokeWidth="1.5" />
-                </svg>
+              <div className="branding-logo-wrapper">
+                <img src="/logo.png" alt="Escape Gaming Logo" className="branding-logo" />
               </div>
             </div>
           </div>

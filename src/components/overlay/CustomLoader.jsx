@@ -62,6 +62,7 @@ export function CustomLoader() {
     <div className={`custom-loader ${isComplete ? 'custom-loader--complete' : ''}`}>
       <div className="custom-loader__inner">
         <div className="custom-loader__header">
+          <img src="/logo.png" alt="Escape Gaming Logo" className="custom-loader__logo" />
           <span className="custom-loader__title">LOADING ESCAPE GAMING...</span>
           <span className="custom-loader__text">{Math.round(displayProgress)}%</span>
         </div>

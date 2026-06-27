@@ -26,6 +26,14 @@
   padding: 0;
   opacity: 0.9;
   transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.site-header__logo {
+  height: clamp(24px, 3.5vw, 32px);
+  width: auto;
+  object-fit: contain;
 }
 
 .site-header__brand:hover {

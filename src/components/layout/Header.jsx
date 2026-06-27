@@ -36,7 +36,7 @@ export function Header({ scrollProgress, scrollTo }) {
         onClick={() => scrollTo(0)}
         aria-label="Go to top"
       >
-        {SITE_NAME}
+        <img src="/logo.png" alt={SITE_NAME} className="site-header__logo" />
       </button>
 
       {/* Desktop nav — only in 2D zone */}

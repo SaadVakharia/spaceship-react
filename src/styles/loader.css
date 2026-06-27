@@ -26,6 +26,15 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  flex-wrap: wrap;
+  row-gap: 1rem;
+}
+
+.custom-loader__logo {
+  width: 100%;
+  height: clamp(30px, 5vw, 45px);
+  object-fit: contain;
+  margin-bottom: 1rem;
 }
 
 .custom-loader__title {
