@@ -5,18 +5,18 @@ import {
   shouldShowHero,
   shouldShowScrollHint,
 } from '../lib/scroll/phases'
-import { AppShell } from '../components/layout/AppShell'
-import { Header } from '../components/layout/Header'
+import { AppShell, Header, FooterBar } from '../components/layout'
 import { GameCanvas } from '../components/canvas/GameCanvas'
-import { HeroOverlay } from '../components/overlay/HeroOverlay'
-import { BlackOverlay } from '../components/overlay/BlackOverlay'
-import { PlanetOverlay } from '../components/overlay/PlanetOverlay'
-import { Starfield } from '../components/overlay/Starfield'
-import { ContactOverlay } from '../components/overlay/ContactOverlay'
-import { ScrollHint } from '../components/overlay/ScrollHint'
-import { BoostButton } from '../components/overlay/BoostButton'
-import { Scrollbar } from '../components/overlay/Scrollbar'
-import { FooterBar } from '../components/layout/FooterBar'
+import {
+  HeroOverlay,
+  BlackOverlay,
+  PlanetOverlay,
+  Starfield,
+  ContactOverlay,
+  ScrollHint,
+  BoostButton,
+  Scrollbar
+} from '../components/overlay'
 
 export default function App() {
   const { scrollProgress, scrollTo } = useScrollProgress()
