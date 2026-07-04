@@ -66,15 +66,13 @@ export function ContactOverlay({ scrollProgress }) {
     setError(null)
 
     try {
-      // 1. Enter your WordPress URL, Form ID, and API Key
-      // When running locally, we leave the domain blank to trigger the Vite proxy
-      const isDev = import.meta.env.DEV
-      const WP_DOMAIN = isDev ? '' : 'https://escapegamingzone.com' 
+      // 1. Enter your Form ID and API Key
+      // We use a relative path here so that the Vite proxy handles it in dev,
+      // and the Vercel rewrite rules handle it in production. This entirely bypasses CORS!
       const FORM_ID = '1' // Check BitForm dashboard for your Form ID
       const API_KEY = import.meta.env.VITE_BITFORM_API_KEY // Kept secret in .env file
 
-      const cleanDomain = WP_DOMAIN.endsWith('/') ? WP_DOMAIN.slice(0, -1) : WP_DOMAIN
-      const BITFORM_ENDPOINT = `${cleanDomain}/wp-json/bitform/v1/entry/${FORM_ID}`
+      const BITFORM_ENDPOINT = `/wp-json/bitform/v1/entry/${FORM_ID}`
 
       // 2. Map your form fields to the exact Field Keys in BitForm using FormData
       const dataToSend = new FormData()
