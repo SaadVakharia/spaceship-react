@@ -6,7 +6,7 @@ export const MAX_SCROLL = 9.0
 
 export const SCROLL_SENSITIVITY = {
   wheel: 0.0015,
-  touch: 0.003,
+  touch: 0.006, // Increased from 0.003 for faster swiping
 }
 
 export const BLACK_OVERLAY = {

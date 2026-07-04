@@ -9,6 +9,7 @@ export function useScrollProgress() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const targetScroll = useRef(0)
   const snapTimeout = useRef(null)
+  const isSnapping = useRef(false)
   const gateLocked = useRef(false) // once true, can't scroll back below PLANETS_START
 
   const scrollTo = (value) => {
@@ -26,9 +27,13 @@ export function useScrollProgress() {
     const loop = () => {
       setScrollProgress((current) => {
         const diff = targetScroll.current - current
-        if (Math.abs(diff) < 0.0005) return targetScroll.current
+        if (Math.abs(diff) < 0.0005) {
+          isSnapping.current = false // snap finished
+          return targetScroll.current
+        }
 
-        const lerpFactor = current >= PLANETS_START ? 0.12 : 0.025
+        const baseLerp = current >= PLANETS_START ? 0.08 : 0.025
+        const lerpFactor = isSnapping.current ? 0.05 : baseLerp
         return current + diff * lerpFactor
       })
       animationFrameId = requestAnimationFrame(loop)
@@ -38,15 +43,15 @@ export function useScrollProgress() {
     const triggerSnap = () => {
       const currentTarget = targetScroll.current
       if (currentTarget >= 3.2 && currentTarget <= 9.0) {
-        // Panels are at 3.5, 4.5, 5.5, 6.5, 7.5, 8.5
         let nearestPanel = Math.round(currentTarget - 0.5) + 0.5
-        nearestPanel = clamp(nearestPanel, 3.5, 8.5) // snap to branding, planet, or contact screens
+        nearestPanel = clamp(nearestPanel, 3.5, 8.5)
         targetScroll.current = nearestPanel
+        isSnapping.current = true
       }
     }
 
     const onScrollActivity = (delta) => {
-      // Clear snap timeout while actively scrolling
+      isSnapping.current = false
       if (snapTimeout.current) clearTimeout(snapTimeout.current)
 
       const minScroll = gateLocked.current ? PLANETS_START : 0
@@ -57,10 +62,10 @@ export function useScrollProgress() {
         gateLocked.current = true
       }
 
-      // Set snap timeout to trigger when scroll stops (reduce to 100ms for faster sync)
+      // Wait a generous 600ms before snapping so it doesn't fight the user's natural scroll pauses
       snapTimeout.current = setTimeout(() => {
         triggerSnap()
-      }, 100)
+      }, 600)
     }
 
     const isScrollableScrollEvent = (event, deltaY) => {
