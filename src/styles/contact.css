@@ -225,7 +225,18 @@
   transform: translateX(4px);
 }
 
-/* ─── Success state ───────────────────────────────────────────────────────── */
+/* ─── Success and Error states ────────────────────────────────────────────── */
+
+.contact-error {
+  color: #ef4444;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  text-align: center;
+}
 
 .contact-success {
   display: flex;

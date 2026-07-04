@@ -25,20 +25,100 @@ export function ContactOverlay({ scrollProgress }) {
   })
   const [submitted, setSubmitted] = useState(false)
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState(null)
+
   if (opacity <= 0.001) return null
 
   const translateY = -offset * 100
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    if (error) setError(null) // clear error on typing
   }
 
-  // TODO: Replace action with your WordPress REST API endpoint
-  // e.g. POST /wp-json/contact-form-7/v1/contact-forms/{id}/feedback
-  const handleSubmit = (e) => {
+  const validateForm = () => {
+    if (!formData.name.trim()) return "Please enter your name."
+    
+    if (!formData.phone.trim()) return "Please enter your phone number."
+    const phoneRegex = /^[+]?[\d\s-]{10,}$/
+    if (!phoneRegex.test(formData.phone)) return "Please enter a valid phone number (at least 10 digits)."
+    
+    if (!formData.email.trim()) return "Please enter your email."
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) return "Please enter a valid email address."
+
+    if (!formData.experience) return "Please select an experience."
+
+    return null
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Form data (wire to WP):', formData)
-    setSubmitted(true)
+    
+    const validationError = validateForm()
+    if (validationError) {
+      setError(validationError)
+      return
+    }
+
+    setIsSubmitting(true)
+    setError(null)
+
+    try {
+      // 1. Enter your WordPress URL, Form ID, and API Key
+      // When running locally, we leave the domain blank to trigger the Vite proxy
+      const isDev = import.meta.env.DEV
+      const WP_DOMAIN = isDev ? '' : 'https://escapegamingzone.com'
+      const FORM_ID = '1' // Check BitForm dashboard for your Form ID
+      const API_KEY = '59971a5c6213ecbb4e58bf91b4a56962f05311d8' // Go to BitForm > Settings > API to get this
+
+      const cleanDomain = WP_DOMAIN.endsWith('/') ? WP_DOMAIN.slice(0, -1) : WP_DOMAIN
+      const BITFORM_ENDPOINT = `${cleanDomain}/wp-json/bitform/v1/entry/${FORM_ID}`
+
+      // 2. Map your form fields to the exact Field Keys in BitForm using FormData
+      const dataToSend = new FormData()
+      dataToSend.append("b1-2", formData.name)
+      dataToSend.append("b1-3", formData.phone)
+      dataToSend.append("b1-4", formData.email)
+      dataToSend.append("b1-5", formData.experience)
+      dataToSend.append("b1-6", formData.message)
+      // Sometimes BitForm requires the submit button key too
+      dataToSend.append("b1-1", "Submit")
+
+      // DEBUG: Log exactly what we are sending
+      console.log('--- DEBUG: Sending to BitForm ---')
+      for (let [key, value] of dataToSend.entries()) {
+        console.log(`${key}: ${value}`)
+      }
+
+      // 3. Send the request
+      const response = await fetch(BITFORM_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Bitform-Api-Key': API_KEY
+        },
+        body: dataToSend
+      })
+
+      // DEBUG: Log the raw response text regardless of success/fail
+      const responseText = await response.text()
+      console.log('--- DEBUG: Response from BitForm ---')
+      console.log('Status:', response.status)
+      console.log('Body:', responseText)
+
+      if (!response.ok) {
+        console.error('BitForm API Error:', response.status, response.statusText, responseText)
+        throw new Error(`Server responded with ${response.status}: ${responseText}`)
+      }
+
+      setSubmitted(true)
+    } catch (err) {
+      console.error('Form submission error:', err)
+      setError('Failed to send message. Please try again or call us.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -106,7 +186,7 @@ export function ContactOverlay({ scrollProgress }) {
             <form
               className="contact-form"
               onSubmit={handleSubmit}
-              /* data-wp-endpoint="/wp-json/contact-form-7/v1/contact-forms/1/feedback" */
+            /* data-wp-endpoint="/wp-json/contact-form-7/v1/contact-forms/1/feedback" */
             >
               <div className="contact-form__row">
                 <div className="contact-field">
@@ -193,9 +273,13 @@ export function ContactOverlay({ scrollProgress }) {
                 />
               </div>
 
-              <button className="contact-submit" type="submit">
-                <span className="contact-submit__text">Send Booking Request</span>
-                <span className="contact-submit__arrow">→</span>
+              {error && <div className="contact-error">{error}</div>}
+
+              <button className="contact-submit" type="submit" disabled={isSubmitting}>
+                <span className="contact-submit__text">
+                  {isSubmitting ? 'Sending...' : 'Send Booking Request'}
+                </span>
+                {!isSubmitting && <span className="contact-submit__arrow">→</span>}
               </button>
             </form>
           )}
