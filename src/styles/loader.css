@@ -35,6 +35,22 @@
   height: clamp(30px, 5vw, 45px);
   object-fit: contain;
   margin-bottom: 1rem;
+  animation: breathe 2.5s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
 }
 
 .custom-loader__title {
@@ -68,4 +84,14 @@
   background: #fff;
   box-shadow: 0 0 10px #fff;
   transition: width 0.1s linear;
+}
+
+@media (max-width: 768px) {
+  .custom-loader__inner {
+    width: 85vw; /* Allow it to take up more width on small screens */
+  }
+  
+  .custom-loader__logo {
+    height: 75px; /* Make the logo significantly taller/larger */
+  }
 }

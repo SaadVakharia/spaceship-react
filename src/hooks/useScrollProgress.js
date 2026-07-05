@@ -8,15 +8,15 @@ function clamp(value, min, max) {
 export function useScrollProgress() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const targetScroll = useRef(0)
-  const snapTimeout = useRef(null)
-  const isSnapping = useRef(false)
+  const isSnapping = useRef(true)
   const gateLocked = useRef(false) // once true, can't scroll back below PLANETS_START
+  const lastScrollTime = useRef(0)
 
   const scrollTo = (value) => {
-    if (snapTimeout.current) clearTimeout(snapTimeout.current)
     const minScroll = gateLocked.current ? PLANETS_START : 0
     targetScroll.current = clamp(value, minScroll, MAX_SCROLL)
     if (value >= PLANETS_START) gateLocked.current = true
+    isSnapping.current = true
   }
 
   useEffect(() => {
@@ -32,40 +32,45 @@ export function useScrollProgress() {
           return targetScroll.current
         }
 
-        const baseLerp = current >= PLANETS_START ? 0.08 : 0.025
-        const lerpFactor = isSnapping.current ? 0.05 : baseLerp
-        return current + diff * lerpFactor
+        // Fast, punchy lerp for discrete page turns
+        return current + diff * 0.07
       })
       animationFrameId = requestAnimationFrame(loop)
     }
     animationFrameId = requestAnimationFrame(loop)
 
-    const triggerSnap = () => {
+    const ALL_STOPS = [0, 1.5, 3.0, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, MAX_SCROLL]
+
+    const handleDiscreteScroll = (direction) => {
+      const now = Date.now()
+      // Cooldown to prevent multiple page jumps from a single flick/swipe
+      if (now - lastScrollTime.current < 600) return
+      
       const currentTarget = targetScroll.current
-      if (currentTarget >= 3.2 && currentTarget <= 9.0) {
-        let nearestPanel = Math.round(currentTarget - 0.5) + 0.5
-        nearestPanel = clamp(nearestPanel, 3.5, 8.5)
-        targetScroll.current = nearestPanel
-        isSnapping.current = true
-      }
-    }
-
-    const onScrollActivity = (delta) => {
-      isSnapping.current = false
-      if (snapTimeout.current) clearTimeout(snapTimeout.current)
-
       const minScroll = gateLocked.current ? PLANETS_START : 0
-      targetScroll.current = clamp(targetScroll.current + delta, minScroll, MAX_SCROLL)
+
+      if (direction > 0) {
+        // Next page
+        const nextStop = ALL_STOPS.find(stop => stop > currentTarget + 0.1)
+        if (nextStop !== undefined) {
+          targetScroll.current = nextStop
+          isSnapping.current = true
+          lastScrollTime.current = now
+        }
+      } else {
+        // Prev page
+        const prevStops = ALL_STOPS.filter(stop => stop < currentTarget - 0.1)
+        if (prevStops.length > 0) {
+          targetScroll.current = Math.max(minScroll, prevStops[prevStops.length - 1])
+          isSnapping.current = true
+          lastScrollTime.current = now
+        }
+      }
 
       // Lock the gate once we've reached the 2D zone
       if (targetScroll.current >= PLANETS_START) {
         gateLocked.current = true
       }
-
-      // Wait a generous 600ms before snapping so it doesn't fight the user's natural scroll pauses
-      snapTimeout.current = setTimeout(() => {
-        triggerSnap()
-      }, 600)
     }
 
     const isScrollableScrollEvent = (event, deltaY) => {
@@ -83,25 +88,30 @@ export function useScrollProgress() {
 
     const onWheel = (event) => {
       if (isScrollableScrollEvent(event, event.deltaY)) return
-
       event.preventDefault()
-      onScrollActivity(event.deltaY * SCROLL_SENSITIVITY.wheel)
+      
+      // Ignore tiny unintentional trackpad movements
+      if (Math.abs(event.deltaY) < 10) return
+      
+      handleDiscreteScroll(event.deltaY > 0 ? 1 : -1)
     }
 
     const onTouchStart = (event) => {
       touchStartY = event.touches[0].clientY
-      if (snapTimeout.current) clearTimeout(snapTimeout.current)
     }
 
     const onTouchMove = (event) => {
       const currentY = event.touches[0].clientY
       const delta = touchStartY - currentY
-      touchStartY = currentY
 
       if (isScrollableScrollEvent(event, delta)) return
+      event.preventDefault() // prevent native overscroll/bounce
 
-      onScrollActivity(delta * SCROLL_SENSITIVITY.touch)
-      event.preventDefault()
+      // Require a meaningful swipe distance to trigger
+      if (Math.abs(delta) > 50) {
+        handleDiscreteScroll(delta > 0 ? 1 : -1)
+        touchStartY = currentY
+      }
     }
 
     window.addEventListener('wheel', onWheel, { passive: false })
@@ -113,7 +123,6 @@ export function useScrollProgress() {
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('touchstart', onTouchStart)
       window.removeEventListener('touchmove', onTouchMove)
-      if (snapTimeout.current) clearTimeout(snapTimeout.current)
     }
   }, [])
 
