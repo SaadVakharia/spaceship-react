@@ -74,12 +74,11 @@ export function ContactOverlay({ scrollProgress }) {
     setError(null)
 
     try {
-      // We use a relative path here so that the Vite proxy handles it in dev,
-      // and the Vercel/Apache rewrite rules handle it in production. This entirely bypasses CORS!
+      // We are fetching directly from the backend to bypass Vercel proxy limits
       const FORM_ID = '1' // Check BitForm dashboard for your Form ID
       const API_KEY = import.meta.env.VITE_BITFORM_API_KEY // Kept secret in .env file
 
-      const BITFORM_ENDPOINT = `/wp-json/bitform/v1/entry/${FORM_ID}`
+      const BITFORM_ENDPOINT = `https://old.escapegamingzone.com/wp-json/bitform/v1/entry/${FORM_ID}`
 
       // 2. Map your form fields to the exact Field Keys in BitForm using FormData
       const dataToSend = new FormData()
