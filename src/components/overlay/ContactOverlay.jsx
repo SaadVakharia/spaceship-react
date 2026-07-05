@@ -22,6 +22,7 @@ export function ContactOverlay({ scrollProgress }) {
     phone: '',
     experience: '',
     message: '',
+    botcheck: '',
   })
   const [submitted, setSubmitted] = useState(false)
 
@@ -56,6 +57,13 @@ export function ContactOverlay({ scrollProgress }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
+    // TRAP BOTS: If the hidden botcheck field is filled, it's a spam bot.
+    if (formData.botcheck) {
+      console.log('Spam bot detected.')
+      setSubmitted(true)
+      return
+    }
+
     const validationError = validateForm()
     if (validationError) {
       setError(validationError)
@@ -66,9 +74,8 @@ export function ContactOverlay({ scrollProgress }) {
     setError(null)
 
     try {
-      // 1. Enter your Form ID and API Key
       // We use a relative path here so that the Vite proxy handles it in dev,
-      // and the Vercel rewrite rules handle it in production. This entirely bypasses CORS!
+      // and the Vercel/Apache rewrite rules handle it in production. This entirely bypasses CORS!
       const FORM_ID = '1' // Check BitForm dashboard for your Form ID
       const API_KEY = import.meta.env.VITE_BITFORM_API_KEY // Kept secret in .env file
 
@@ -186,6 +193,20 @@ export function ContactOverlay({ scrollProgress }) {
               onSubmit={handleSubmit}
             /* data-wp-endpoint="/wp-json/contact-form-7/v1/contact-forms/1/feedback" */
             >
+              {/* Honeypot Field - Hidden from humans */}
+              <div style={{ display: 'none' }} aria-hidden="true">
+                <label htmlFor="cf-botcheck">Do not fill this out</label>
+                <input
+                  id="cf-botcheck"
+                  type="text"
+                  name="botcheck"
+                  value={formData.botcheck}
+                  onChange={handleChange}
+                  tabIndex="-1"
+                  autoComplete="off"
+                />
+              </div>
+
               <div className="contact-form__row">
                 <div className="contact-field">
                   <label className="contact-field__label" htmlFor="cf-name">

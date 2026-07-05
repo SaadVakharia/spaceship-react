@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/wp-json': {
-        target: 'https://escapegamingzone.com',
+        target: 'https://old.escapegamingzone.com',
         changeOrigin: true,
         secure: false,
       }
