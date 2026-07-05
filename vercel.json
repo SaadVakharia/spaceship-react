@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/wp-json/:path*",
-      "destination": "https://escapegamingzone.com/wp-json/:path*"
+      "destination": "https://old.escapegamingzone.com/wp-json/:path*"
     }
   ]
 }
