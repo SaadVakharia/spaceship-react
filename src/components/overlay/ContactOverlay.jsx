@@ -74,46 +74,27 @@ export function ContactOverlay({ scrollProgress }) {
     setError(null)
 
     try {
-      // We are fetching directly from the backend to bypass Vercel proxy limits
-      const FORM_ID = '1' // Check BitForm dashboard for your Form ID
-      const API_KEY = import.meta.env.VITE_BITFORM_API_KEY // Kept secret in .env file
-
-      const BITFORM_ENDPOINT = `https://old.escapegamingzone.com/wp-json/bitform/v1/entry/${FORM_ID}`
-
-      // 2. Map your form fields to the exact Field Keys in BitForm using FormData
-      const dataToSend = new FormData()
-      dataToSend.append("b1-2", formData.name)
-      dataToSend.append("b1-3", formData.phone)
-      dataToSend.append("b1-4", formData.email)
-      dataToSend.append("b1-5", formData.experience)
-      dataToSend.append("b1-6", formData.message)
-      // Sometimes BitForm requires the submit button key too
-      dataToSend.append("b1-1", "Submit")
-
-      // DEBUG: Log exactly what we are sending
-      console.log('--- DEBUG: Sending to BitForm ---')
-      for (let [key, value] of dataToSend.entries()) {
-        console.log(`${key}: ${value}`)
-      }
-
-      // 3. Send the request
-      const response = await fetch(BITFORM_ENDPOINT, {
+      // Send the request to our Vercel Serverless Function (proxy)
+      // This keeps the API key hidden and completely avoids CORS issues!
+      const response = await fetch('/api/booking', {
         method: 'POST',
         headers: {
-          'Bitform-Api-Key': API_KEY
+          'Content-Type': 'application/json'
         },
-        body: dataToSend
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          experience: formData.experience,
+          message: formData.message
+        })
       })
 
-      // DEBUG: Log the raw response text regardless of success/fail
-      const responseText = await response.text()
-      console.log('--- DEBUG: Response from BitForm ---')
-      console.log('Status:', response.status)
-      console.log('Body:', responseText)
+      const responseData = await response.json()
 
       if (!response.ok) {
-        console.error('BitForm API Error:', response.status, response.statusText, responseText)
-        throw new Error(`Server responded with ${response.status}: ${responseText}`)
+        console.error('Booking Error:', responseData)
+        throw new Error(responseData.error || 'Failed to submit form')
       }
 
       setSubmitted(true)
