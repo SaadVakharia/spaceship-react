@@ -8,7 +8,7 @@ import * as THREE from 'three'
 
 export const Spaceship = forwardRef(function Spaceship({ position, rotation }, ref) {
   const { nodes, materials } = useGLTF('/models/spaceship.glb')
-  const beamTex = useTexture('/textures/energy-beam-opacity.png')
+  const beamTex = useTexture('/textures/energy-beam-opacity.webp')
   const beamRef = useRef()
 
   useEffect(() => {

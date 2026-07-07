@@ -6,10 +6,10 @@ import { Stars } from '../three/environment/Stars'
 import { IntroScene } from '../three/intro/IntroScene'
 
 // Preload 2D planet textures so the 3D loader tracks them
-useTexture.preload('/textures/playstation_planet.png')
-useTexture.preload('/textures/driving_planet.png')
-useTexture.preload('/textures/vr_planet.png')
-useTexture.preload('/textures/pc_planet.png')
+useTexture.preload('/textures/playstation_planet.webp')
+useTexture.preload('/textures/driving_planet.webp')
+useTexture.preload('/textures/vr_planet.webp')
+useTexture.preload('/textures/pc_planet.webp')
 
 export function SceneRoot({ scrollProgress = 0 }) {
   const { gl } = useThree()

@@ -39,7 +39,7 @@ function makeStar() {
 
 export function Stars() {
   const meshRef = useRef()
-  const starTex = useTexture('/textures/star.png')
+  const starTex = useTexture('/textures/star.webp')
   const stars = useMemo(() => Array.from({ length: STARS_COUNT }, makeStar), [])
   const dummy = useMemo(() => new THREE.Object3D(), [])
 

@@ -3,7 +3,7 @@ import { PLANETS_START } from '../../config/scroll'
 import '../../styles/overlays.css'
 
 function Planet2D({ id }) {
-  const textureUrl = `/textures/${id}_planet.png`
+  const textureUrl = `/textures/${id}_planet.webp`
 
   return (
     <div className="planet-sphere-container">
