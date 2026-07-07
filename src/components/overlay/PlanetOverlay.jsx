@@ -1,5 +1,6 @@
 import { EXPERIENCES } from '../../config/experiences'
 import { PLANETS_START } from '../../config/scroll'
+import { SEO_CONTENT } from '../../config/seoContent'
 import '../../styles/overlays.css'
 
 function Planet2D({ id }) {
@@ -23,26 +24,37 @@ export function PlanetOverlay({ scrollProgress }) {
 
   if (!visible) return null
 
-  // Calculate active index of actual planets (which start at 4.5)
-  const planetScrollProgress = Math.max(0, scrollProgress - 4.5)
-  const activePlanetIndex = Math.min(EXPERIENCES.length - 1, Math.floor(planetScrollProgress))
-
-  // Branding Offset calculations
-  const brandingOffset = scrollProgress - 3.5
+  // ── Branding (2 sections: 3.5 → 4.5) ──
+  const brandingStayStart = 3.5
+  const brandingStayEnd = 4.5
+  let brandingOffset
+  if (scrollProgress < brandingStayStart) {
+    brandingOffset = scrollProgress - brandingStayStart
+  } else if (scrollProgress > brandingStayEnd) {
+    brandingOffset = scrollProgress - brandingStayEnd
+  } else {
+    brandingOffset = 0
+  }
   const brandingTranslateY = -brandingOffset * 100
-  // Use a slow fade-in (0.7) but a fast fade-out (1.5) so it doesn't bleed into Experience 1
   const brandingOpacityMultiplier = brandingOffset < 0 ? 0.7 : 1.5
   const brandingOpacity = Math.max(0, 1 - Math.abs(brandingOffset) * brandingOpacityMultiplier)
   const brandingScale = 1 - Math.min(0.5, Math.abs(brandingOffset) * 0.5)
 
+  // Branding body cross-fade
+  const brand1Offset = scrollProgress - 3.5
+  const brand1Opacity = Math.max(0, 1 - Math.abs(brand1Offset) * 1.5)
+  const brand2Offset = scrollProgress - 4.5
+  const brand2Opacity = Math.max(0, 1 - Math.abs(brand2Offset) * 1.5)
+  
+  // Calculate active pagination section for branding (0 or 1)
+  const brandActiveSection = Math.max(0, Math.min(1, Math.round(scrollProgress - 3.5)))
+
   return (
     <div className="planet-overlay-2d">
 
-      {/* Branding Section */}
+      {/* ═══ Branding Section ═══ */}
       {brandingOpacity > 0.001 && (
-        <div
-          className="planet-section planet-section--branding"
-        >
+        <div className="planet-section planet-section--branding">
           <div
             className="planet-section__visual"
             style={{
@@ -58,48 +70,90 @@ export function PlanetOverlay({ scrollProgress }) {
             </div>
           </div>
 
-          <div
-            className="planet-section__content"
-            style={{
-              transform: `translateY(${brandingTranslateY}vh)`,
-              opacity: brandingOpacity,
-            }}
-          >
-            <span className="planet-section__label">Welcome to</span>
-            <h1 className="branding-title">ESCAPE GAMING</h1>
-            <p className="branding-subtitle">THE BEST GAMING ZONE IN BANDRA</p>
-            <p className="branding-description">
-              Step in to the world of extreme gaming at Escape Gaming Zone in Bandra, home to the best PS5 gaming and VR lounges in Mumbai. For both casual and serious gamers, we’ve got what it takes to elevate your play.
-            </p>
+          <div className="planet-section__content-stack" style={{ opacity: brandingOpacity }}>
+            <div className="planet-section__content planet-section__content--static">
+              <span className="planet-section__label">Welcome to</span>
+              <h1 className="branding-title">ESCAPE GAMING</h1>
+              <p className="branding-subtitle">THE BEST GAMING ZONE IN BANDRA</p>
+              <div className="planet-section__pagination">
+                {[0, 1].map(i => (
+                  <div key={i} className={`pagination-line ${i === brandActiveSection ? 'active' : ''}`} />
+                ))}
+              </div>
+            </div>
+
+            <div className="planet-section__body-stack">
+              <div
+                className="planet-section__body"
+                style={{ opacity: brand1Opacity, pointerEvents: brand1Opacity > 0.5 ? 'auto' : 'none' }}
+              >
+                <p className="branding-description">
+                  {SEO_CONTENT.about.intro}
+                </p>
+              </div>
+              <div
+                className="planet-section__body"
+                style={{ opacity: brand2Opacity, pointerEvents: brand2Opacity > 0.5 ? 'auto' : 'none' }}
+              >
+                <ul className="planet-section__features">
+                  {SEO_CONTENT.about.whyChooseUs.map((feature, idx) => (
+                    <li key={idx} className="planet-section__feature-item">
+                      <span className="feature-dot" style={{ backgroundColor: '#fff', boxShadow: '0 0 8px #fff' }} />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Planet Sections */}
+      {/* ═══ Planet Sections (3 sections each) ═══ */}
       {EXPERIENCES.map((experience, index) => {
-        const offset = scrollProgress - (4.5 + index)
-        const translateY = -offset * 100
+        // Each planet gets 3 scroll units
+        const baseScroll = 5.5 + index * 3
+        const stayEnd = baseScroll + 2
+
+        // Dead-zone clamp: planet locked during all 3 sections
+        let offset
+        if (scrollProgress < baseScroll) {
+          offset = scrollProgress - baseScroll
+        } else if (scrollProgress > stayEnd) {
+          offset = scrollProgress - stayEnd
+        } else {
+          offset = 0
+        }
+
+        // Original animation formulas
+        const translateX = offset * 25
         const opacity = Math.max(0, 1 - Math.abs(offset) * 1.2)
         const scale = 1 - Math.min(0.5, Math.abs(offset) * 0.5)
-        
-        // Add dynamic rotation so the planet revolves into place
         const rotate = offset * -60
-        
-        // Add horizontal swing so it flies in from the side
-        const translateX = offset * 25 // 25vw side-to-side movement
-        
-        // Add a cinematic depth-of-field blur effect
         const blur = Math.abs(offset) * 15
 
         if (opacity <= 0.001) return null
 
         const layoutClass = index % 2 === 0 ? 'planet-section--right' : 'planet-section--left'
+        const isRight = layoutClass === 'planet-section--right'
+        const seoData = SEO_CONTENT.planets[experience.id]
+
+        // 3 body cross-fades
+        const sec1Offset = scrollProgress - baseScroll
+        const sec1Opacity = Math.max(0, 1 - Math.abs(sec1Offset) * 1.5)
+
+        const sec2Offset = scrollProgress - (baseScroll + 1)
+        const sec2Opacity = Math.max(0, 1 - Math.abs(sec2Offset) * 1.5)
+
+        const sec3Offset = scrollProgress - (baseScroll + 2)
+        const sec3Opacity = Math.max(0, 1 - Math.abs(sec3Offset) * 1.5)
+        
+        // Calculate active pagination section for planet (0, 1, or 2)
+        const activeSection = Math.max(0, Math.min(2, Math.round(scrollProgress - baseScroll)))
 
         return (
-          <div
-            key={experience.id}
-            className={`planet-section ${layoutClass}`}
-          >
+          <div key={experience.id} className={`planet-section ${layoutClass}`}>
+
             <div
               className="planet-section__visual"
               style={{
@@ -112,35 +166,60 @@ export function PlanetOverlay({ scrollProgress }) {
             </div>
 
             <div
-              className="planet-section__content"
-              style={{
-                transform: `translateY(${translateY}vh)`, // translates vertically
-                opacity,
-              }}
+              className={`planet-section__content-stack ${isRight ? 'planet-section__content-stack--right' : ''}`}
+              style={{ opacity }}
             >
-              <span className="planet-section__label">
-                Experience {String(index + 1).padStart(2, '0')} /{' '}
-                {String(EXPERIENCES.length).padStart(2, '0')}
-              </span>
-              <h2 className="planet-section__title">{experience.title}</h2>
-              <p className="planet-section__subtitle">{experience.subtitle}</p>
-              <p className="planet-section__description">{experience.description}</p>
+              {/* Static header */}
+              <div className="planet-section__content planet-section__content--static">
+                <span className="planet-section__label">
+                  Experience {String(index + 1).padStart(2, '0')} /{' '}
+                  {String(EXPERIENCES.length).padStart(2, '0')}
+                </span>
+                <h2 className="planet-section__title">{experience.title}</h2>
+                <p className="planet-section__subtitle">{experience.subtitle}</p>
+                <div className="planet-section__pagination">
+                  {[0, 1, 2].map(i => (
+                    <div key={i} className={`pagination-line ${i === activeSection ? 'active' : ''}`} />
+                  ))}
+                </div>
+              </div>
 
-              <ul className="planet-section__features">
-                {experience.features.map((feature, fIdx) => (
-                  <li key={fIdx} className="planet-section__feature-item">
-                    <span
-                      className="feature-dot"
-                      style={{
-                        backgroundColor: experience.glow,
-                        boxShadow: `0 0 8px ${experience.glow}`
-                      }}
-                    />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+              {/* 3-way swappable body */}
+              <div className="planet-section__body-stack">
+                {/* Body 1: SEO paragraph 1 + Features */}
+                <div
+                  className="planet-section__body"
+                  style={{ opacity: sec1Opacity, pointerEvents: sec1Opacity > 0.5 ? 'auto' : 'none' }}
+                >
+                  <p className="planet-section__description">
+                    {seoData.paragraphs[0]}
+                  </p>
+                </div>
+
+                {/* Body 2: SEO paragraph 2 */}
+                <div
+                  className="planet-section__body"
+                  style={{ opacity: sec2Opacity, pointerEvents: sec2Opacity > 0.5 ? 'auto' : 'none' }}
+                >
+                  <p className="planet-section__description">
+                    {seoData.paragraphs[1]}
+                  </p>
+                </div>
+
+                {/* Body 3: SEO paragraph 3 */}
+                <div
+                  className="planet-section__body"
+                  style={{ opacity: sec3Opacity, pointerEvents: sec3Opacity > 0.5 ? 'auto' : 'none' }}
+                >
+                  {seoData.paragraphs[2] && (
+                    <p className="planet-section__description">
+                      {seoData.paragraphs[2]}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
+
           </div>
         )
       })}

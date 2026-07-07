@@ -39,7 +39,7 @@ export function useScrollProgress() {
     }
     animationFrameId = requestAnimationFrame(loop)
 
-    const ALL_STOPS = [0, 1.5, 3.0, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, MAX_SCROLL]
+    const ALL_STOPS = [0, 1.5, 3.0, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5, 16.5, 17.5]
 
     const handleDiscreteScroll = (direction) => {
       const now = Date.now()

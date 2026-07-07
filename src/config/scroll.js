@@ -1,8 +1,8 @@
 export const INTRO_END = 3
 export const PLANETS_START = 3.5
-export const PLANETS_END = 8.5
-export const CONTACT_AT = 8.5
-export const MAX_SCROLL = 8.5
+export const PLANETS_END = 17.5
+export const CONTACT_AT = 17.5
+export const MAX_SCROLL = 17.5
 
 export const SCROLL_SENSITIVITY = {
   wheel: 0.0015,

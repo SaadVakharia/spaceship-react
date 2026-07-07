@@ -5,11 +5,11 @@ import '../../styles/layout.css'
 
 // Each nav item maps to a snap-point in the scroll system
 const NAV_ITEMS = [
-  { label: 'PS5',      scrollTarget: 4.5 },
-  { label: 'Driving',  scrollTarget: 5.5 },
-  { label: 'VR',       scrollTarget: 6.5 },
-  { label: 'PC',       scrollTarget: 7.5 },
-  { label: 'Contact',  scrollTarget: 8.5 },
+  { label: 'PS5',      scrollTarget: 5.5 },
+  { label: 'Driving',  scrollTarget: 8.5 },
+  { label: 'VR',       scrollTarget: 11.5 },
+  { label: 'PC',       scrollTarget: 14.5 },
+  { label: 'Contact',  scrollTarget: 17.5 },
 ]
 
 export function Header({ scrollProgress, scrollTo }) {

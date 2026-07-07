@@ -39,13 +39,76 @@
   min-width: 0;
 }
 
-/* Text Content Container (Translates vertically and fades) */
+/* Text Content Container */
 .planet-section__content {
-  transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s linear;
+  transition: opacity 0.15s linear;
   display: flex;
   flex-direction: column;
-  max-height: 65vh;
+}
+
+/* Static content header — not animated, stays visible */
+.planet-section__content--static {
+  margin-bottom: 0.5rem;
+}
+
+/* Content Stack — vertical layout: static header on top, swappable body below */
+.planet-section__content-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  max-height: 75vh;
   overflow: hidden;
+  width: 100%;
+  max-width: 650px;
+}
+
+.planet-section__content-stack--right {
+  text-align: right;
+}
+
+/* Body Stack — layers all body sections on top of each other */
+.planet-section__body-stack {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  width: 100%;
+}
+
+.planet-section__body {
+  grid-column: 1;
+  grid-row: 1;
+  transition: opacity 0.15s linear;
+  max-height: 40vh;
+  overflow-y: auto;
+  pointer-events: auto;
+  width: 100%;
+}
+
+/* Custom light scrollbar */
+.planet-section__body::-webkit-scrollbar {
+  width: 3px;
+}
+
+.planet-section__body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.planet-section__body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+}
+
+.planet-section__body::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Firefox scrollbar */
+.planet-section__body {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) rgba(255, 255, 255, 0.05);
 }
 
 /* Layout: --left  → planet col 1, text col 2 */
@@ -57,11 +120,10 @@
   grid-row: 1;
 }
 
-.planet-section--left .planet-section__content,
-.planet-section--branding .planet-section__content {
+.planet-section--left .planet-section__content-stack,
+.planet-section--branding .planet-section__content-stack {
   grid-column: 2;
   grid-row: 1;
-  text-align: left;
   align-self: center;
   justify-self: start;
 }
@@ -71,10 +133,9 @@
   grid-row: 1;
 }
 
-.planet-section--right .planet-section__content {
+.planet-section--right .planet-section__content-stack {
   grid-column: 1;
   grid-row: 1;
-  text-align: right;
   align-self: center;
   justify-self: end;
 }
@@ -87,64 +148,87 @@
 /* Content Text Styling */
 .planet-section__label {
   font-family: var(--font-display);
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   font-weight: 400;
   letter-spacing: var(--tracking-wider);
   color: var(--color-muted);
   text-transform: uppercase;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   display: block;
+  line-height: 1.6;
 }
 
 .planet-section__title {
   font-family: var(--font-display);
-  font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+  font-size: clamp(1.2rem, 3vw, 2rem);
   font-weight: 700;
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  line-height: 1.35;
-  margin-bottom: 0.5rem;
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
   color: #fff;
 }
 
 .planet-section__subtitle {
   font-family: var(--font-display);
-  font-size: clamp(0.55rem, 1.1vw, 0.72rem);
+  font-size: clamp(0.6rem, 1.1vw, 0.75rem);
   font-weight: 400;
   letter-spacing: 0.15em;
   color: var(--color-accent);
   text-transform: uppercase;
   margin-bottom: 1.5rem;
   opacity: 0.9;
+  line-height: 1.6;
+}
+
+.planet-section__pagination {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.planet-section__content-stack--right .planet-section__pagination {
+  justify-content: flex-end;
+}
+
+.pagination-line {
+  width: 2.5rem;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.pagination-line.active {
+  background-color: var(--color-accent);
+  /* Use the purple accent color for the active mark */
+  transform: scaleY(1.5);
 }
 
 .planet-section__description {
   font-family: var(--font-body);
-  font-size: clamp(0.72rem, 1.2vw, 0.85rem);
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
   font-weight: 300;
-  line-height: 1.8;
+  line-height: 2;
   color: var(--color-muted);
-  margin-bottom: 1.75rem;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.025em;
 }
 
 .planet-section__features {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
 }
 
 .planet-section__feature-item {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-family: var(--font-display);
-  font-size: clamp(0.58rem, 1vw, 0.68rem);
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.85);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  align-items: flex-start;
+  gap: 0.85rem;
+  font-family: var(--font-body);
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+  font-weight: 300;
+  color: var(--color-muted);
+  line-height: 2;
 }
 
 .feature-dot {
@@ -152,6 +236,7 @@
   height: 5px;
   border-radius: 50%;
   flex-shrink: 0;
+  margin-top: 0.75rem;
 }
 
 
@@ -174,16 +259,16 @@
   color: var(--color-accent);
   letter-spacing: var(--tracking-wider);
   margin-bottom: 1.5rem;
+  line-height: 1.8;
 }
 
 .branding-description {
   font-family: var(--font-body);
-  font-size: clamp(0.75rem, 1.25vw, 0.9rem);
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
   font-weight: 300;
-  line-height: 1.8;
+  line-height: 2;
   color: var(--color-muted);
-  max-width: 500px;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.025em;
 }
 
 /* Branding Portal Visual - ENLARGED */
@@ -336,13 +421,24 @@
     grid-row: 1;
   }
 
-  .planet-section--left .planet-section__content,
-  .planet-section--right .planet-section__content,
-  .planet-section--branding .planet-section__content {
+  .planet-section--left .planet-section__content-stack,
+  .planet-section--right .planet-section__content-stack,
+  .planet-section--branding .planet-section__content-stack {
     grid-column: 1;
     grid-row: 2;
-    text-align: center;
     justify-self: center;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .planet-section__content-stack--right {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .planet-section__pagination,
+  .planet-section__content-stack--right .planet-section__pagination {
+    justify-content: center;
   }
 
   /* Force details alignment to center on mobile */
@@ -362,7 +458,7 @@
 
   .planet-section__title,
   .branding-title {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-bottom: 0.4rem;
   }
 
@@ -374,7 +470,7 @@
 
   .planet-section__description,
   .branding-description {
-    font-size: 0.72rem;
+    font-size: 0.9rem;
     line-height: 1.6;
     margin: 0 auto 1.25rem;
   }
