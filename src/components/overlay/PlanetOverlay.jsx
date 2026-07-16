@@ -40,14 +40,19 @@ export function PlanetOverlay({ scrollProgress }) {
   const brandingOpacity = Math.max(0, 1 - Math.abs(brandingOffset) * brandingOpacityMultiplier)
   const brandingScale = 1 - Math.min(0.5, Math.abs(brandingOffset) * 0.5)
 
-  // Branding body cross-fade
-  const brand1Offset = scrollProgress - 3.5
-  const brand1Opacity = Math.max(0, 1 - Math.abs(brand1Offset) * 1.5)
-  const brand2Offset = scrollProgress - 4.5
-  const brand2Opacity = Math.max(0, 1 - Math.abs(brand2Offset) * 1.5)
-  
   // Calculate active pagination section for branding (0 or 1)
   const brandActiveSection = Math.max(0, Math.min(1, Math.round(scrollProgress - 3.5)))
+
+  // Branding body cross-fade
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const brand1Offset = scrollProgress - 3.5
+  const brand1Opacity = isMobile
+    ? (brandActiveSection === 0 ? 1 : 0)
+    : Math.max(0, 1 - Math.abs(brand1Offset) * 1.5)
+  const brand2Offset = scrollProgress - 4.5
+  const brand2Opacity = isMobile
+    ? (brandActiveSection === 1 ? 1 : 0)
+    : Math.max(0, 1 - Math.abs(brand2Offset) * 1.5)
 
   return (
     <div className="planet-overlay-2d">
@@ -138,18 +143,24 @@ export function PlanetOverlay({ scrollProgress }) {
         const isRight = layoutClass === 'planet-section--right'
         const seoData = SEO_CONTENT.planets[experience.id]
 
-        // 3 body cross-fades
-        const sec1Offset = scrollProgress - baseScroll
-        const sec1Opacity = Math.max(0, 1 - Math.abs(sec1Offset) * 1.5)
-
-        const sec2Offset = scrollProgress - (baseScroll + 1)
-        const sec2Opacity = Math.max(0, 1 - Math.abs(sec2Offset) * 1.5)
-
-        const sec3Offset = scrollProgress - (baseScroll + 2)
-        const sec3Opacity = Math.max(0, 1 - Math.abs(sec3Offset) * 1.5)
-        
         // Calculate active pagination section for planet (0, 1, or 2)
         const activeSection = Math.max(0, Math.min(2, Math.round(scrollProgress - baseScroll)))
+
+        // 3 body cross-fades
+        const sec1Offset = scrollProgress - baseScroll
+        const sec1Opacity = isMobile
+          ? (activeSection === 0 ? 1 : 0)
+          : Math.max(0, 1 - Math.abs(sec1Offset) * 1.5)
+
+        const sec2Offset = scrollProgress - (baseScroll + 1)
+        const sec2Opacity = isMobile
+          ? (activeSection === 1 ? 1 : 0)
+          : Math.max(0, 1 - Math.abs(sec2Offset) * 1.5)
+
+        const sec3Offset = scrollProgress - (baseScroll + 2)
+        const sec3Opacity = isMobile
+          ? (activeSection === 2 ? 1 : 0)
+          : Math.max(0, 1 - Math.abs(sec3Offset) * 1.5)
 
         return (
           <div key={experience.id} className={`planet-section ${layoutClass}`}>
