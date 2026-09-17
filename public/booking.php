@@ -24,12 +24,18 @@ if (!$data) {
 }
 
 // 4. Build the POST fields as expected by BitForm
+$timestamp = !empty($data['timestamp']) ? $data['timestamp'] : date('d M Y, h:i A (T)');
+$raw_message = isset($data['message']) ? trim($data['message']) : "";
+$message_with_time = !empty($raw_message) 
+    ? $raw_message . "\n\n[Submission Time: " . $timestamp . "]"
+    : "[Submission Time: " . $timestamp . "]";
+
 $post_fields = [
     "b1-2" => isset($data['name']) ? $data['name'] : "",
     "b1-3" => isset($data['phone']) ? $data['phone'] : "",
     "b1-4" => isset($data['email']) ? $data['email'] : "",
     "b1-5" => isset($data['experience']) ? $data['experience'] : "",
-    "b1-6" => isset($data['message']) ? $data['message'] : "",
+    "b1-6" => $message_with_time,
     "b1-1" => "Submit"
 ];
 

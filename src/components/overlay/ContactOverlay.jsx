@@ -74,6 +74,12 @@ export function ContactOverlay({ scrollProgress }) {
     setError(null)
 
     try {
+      const submissionTime = new Date().toLocaleString('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        dateStyle: 'medium',
+        timeStyle: 'medium'
+      })
+
       // Send the request to our Hostinger PHP proxy script
       // This keeps the API key hidden and completely avoids CORS issues!
       const response = await fetch('/booking.php', {
@@ -86,7 +92,8 @@ export function ContactOverlay({ scrollProgress }) {
           phone: formData.phone,
           email: formData.email,
           experience: formData.experience,
-          message: formData.message
+          message: formData.message,
+          timestamp: submissionTime
         })
       })
 
@@ -184,6 +191,11 @@ export function ContactOverlay({ scrollProgress }) {
                   onChange={handleChange}
                   tabIndex="-1"
                   autoComplete="off"
+                />
+                <input
+                  type="hidden"
+                  name="timestamp"
+                  value={formData.timestamp || ''}
                 />
               </div>
 
