@@ -2,15 +2,15 @@
 // booking.php - Backend PHP proxy for BitForm submissions
 
 // 1. Set your BitForm API key here (DO NOT expose this in the frontend React code!)
-$api_key = "ccksweeeed71iwiic2iptsjp1506i9y1e5cdre"; 
+$api_key = "[ENCRYPTION_KEY]";
 $form_id = "1";
 $bitform_endpoint = "https://old.escapegamingzone.com/wp-json/bitform/v1/entry/" . $form_id;
 
 // 2. Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(["error" => "Method Not Allowed"]);
-    exit;
+  http_response_code(405);
+  echo json_encode(["error" => "Method Not Allowed"]);
+  exit;
 }
 
 // 3. Read the JSON body sent by React
@@ -18,25 +18,25 @@ $json_str = file_get_contents('php://input');
 $data = json_decode($json_str, true);
 
 if (!$data) {
-    http_response_code(400);
-    echo json_encode(["error" => "Invalid JSON payload"]);
-    exit;
+  http_response_code(400);
+  echo json_encode(["error" => "Invalid JSON payload"]);
+  exit;
 }
 
 // 4. Build the POST fields as expected by BitForm
 $timestamp = !empty($data['timestamp']) ? $data['timestamp'] : date('d M Y, h:i A (T)');
 $raw_message = isset($data['message']) ? trim($data['message']) : "";
-$message_with_time = !empty($raw_message) 
-    ? $raw_message . "\n\n[Submission Time: " . $timestamp . "]"
-    : "[Submission Time: " . $timestamp . "]";
+$message_with_time = !empty($raw_message)
+  ? $raw_message . "\n\n[Submission Time: " . $timestamp . "]"
+  : "[Submission Time: " . $timestamp . "]";
 
 $post_fields = [
-    "b1-2" => isset($data['name']) ? $data['name'] : "",
-    "b1-3" => isset($data['phone']) ? $data['phone'] : "",
-    "b1-4" => isset($data['email']) ? $data['email'] : "",
-    "b1-5" => isset($data['experience']) ? $data['experience'] : "",
-    "b1-6" => $message_with_time,
-    "b1-1" => "Submit"
+  "b1-2" => isset($data['name']) ? $data['name'] : "",
+  "b1-3" => isset($data['phone']) ? $data['phone'] : "",
+  "b1-4" => isset($data['email']) ? $data['email'] : "",
+  "b1-5" => isset($data['experience']) ? $data['experience'] : "",
+  "b1-6" => $message_with_time,
+  "b1-1" => "Submit"
 ];
 
 // 5. Send the request via cURL to BitForm
@@ -47,8 +47,8 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_fields));
 
 // Add the custom API Key header
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "Bitform-Api-Key: " . $api_key,
-    "Content-Type: application/x-www-form-urlencoded"
+  "Bitform-Api-Key: " . $api_key,
+  "Content-Type: application/x-www-form-urlencoded"
 ]);
 
 // Execute the request
@@ -99,13 +99,13 @@ $email_html = "
 ";
 
 $headers = [
-    'MIME-Version: 1.0',
-    'Content-type: text/html; charset=UTF-8',
-    'From: Escape Gaming Bookings <noreply@escapegamingzone.com>',
-    'X-Mailer: PHP/' . phpversion()
+  'MIME-Version: 1.0',
+  'Content-type: text/html; charset=UTF-8',
+  'From: Escape Gaming Bookings <noreply@escapegamingzone.com>',
+  'X-Mailer: PHP/' . phpversion()
 ];
 if (!empty($customer_email)) {
-    $headers[] = 'Reply-To: ' . $customer_email;
+  $headers[] = 'Reply-To: ' . $customer_email;
 }
 
 @mail($to_email, $subject, $email_html, implode("\r\n", $headers));
@@ -115,8 +115,8 @@ http_response_code($httpcode ?: 200);
 header('Content-Type: application/json');
 
 if ($error) {
-    echo json_encode(["error" => "cURL Error", "details" => $error]);
+  echo json_encode(["error" => "cURL Error", "details" => $error]);
 } else {
-    echo $response;
+  echo $response;
 }
 ?>

@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/booking.php",
+      "destination": "/api/booking"
+    },
+    {
       "source": "/wp-json/:path*",
       "destination": "https://old.escapegamingzone.com/wp-json/:path*"
     }
