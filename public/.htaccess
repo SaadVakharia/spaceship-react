@@ -2,12 +2,11 @@
   RewriteEngine On
   RewriteBase /
 
-  # Proxy API requests to the WordPress backend (bypasses CORS)
-  RewriteRule ^wp-json/(.*)$ https://old.escapegamingzone.com/wp-json/$1 [P,L]
+  # Do not rewrite existing files or directories (like booking.php, assets, images)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
 
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_FILENAME} !-l
-  RewriteRule . /index.html [L]
+  # Route all other requests to index.html for React SPA routing
+  RewriteRule ^ index.html [L]
 </IfModule>

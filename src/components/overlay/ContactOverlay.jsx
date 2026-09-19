@@ -80,9 +80,9 @@ export function ContactOverlay({ scrollProgress }) {
         timeStyle: 'medium'
       })
 
-      // Send the request to our Vercel Serverless Function (/api/booking)
-      // This keeps the API key hidden and avoids CORS issues
-      const response = await fetch('/api/booking', {
+      // Send the request to our Hostinger PHP proxy script (/booking.php)
+      // This keeps the API key hidden and sends both BitForm entry and direct email
+      const response = await fetch('/booking.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
