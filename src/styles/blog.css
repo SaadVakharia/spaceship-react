@@ -55,6 +55,12 @@
   object-fit: contain;
 }
 
+.blog-header-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .blog-header-nav-link {
   font-family: var(--font-display, 'Syncopate', sans-serif);
   font-size: 0.58rem;
@@ -1094,25 +1100,297 @@
 
 /* ─── Responsive Media Queries ────────────────────────────────────────────── */
 
+/* Tablet & Smaller Desktops (<= 992px) */
+@media (max-width: 992px) {
+  .blog-single-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  .blog-main-col {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .blog-sidebar-col {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .blog-single-content-container {
+    padding: 2.5rem 1.75rem 5rem;
+  }
+}
+
+/* Mobile Devices (<= 767px) */
 @media (max-width: 767px) {
   .blog-header-bar {
-    padding: 1rem 1.5rem;
+    padding: 0.9rem 1.15rem;
+  }
+
+  .blog-header-nav-group {
+    gap: 0.65rem;
+  }
+
+  .blog-header-nav-link {
+    font-size: 0.52rem;
+    letter-spacing: 0.14em;
+    gap: 0.35rem;
   }
 
   .blog-content-wrapper,
   .blog-article-container {
-    padding: 2.5rem 1.25rem 5rem;
+    padding: 2.25rem 1rem 4.5rem;
   }
 
+  .blog-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Single Post Hero */
+  .blog-single-hero {
+    padding: 2.5rem 1rem 1.75rem;
+  }
+
+  .blog-single-hero-inner {
+    width: 100%;
+  }
+
+  .blog-breadcrumbs {
+    font-size: 0.48rem;
+    letter-spacing: 0.12em;
+    gap: 0.35rem;
+    margin-bottom: 0.85rem;
+    word-break: break-word;
+  }
+
+  .blog-single-title {
+    font-size: clamp(1.35rem, 6.5vw, 2.1rem);
+    letter-spacing: 0.1em;
+    line-height: 1.25;
+    margin-bottom: 0.9rem;
+    word-break: break-word;
+  }
+
+  .blog-single-meta {
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    gap: 0.45rem;
+  }
+
+  .blog-category-badge {
+    font-size: 0.48rem;
+    padding: 0.15rem 0.45rem;
+  }
+
+  /* 2-Column Container becomes 100% full-width stacked column */
+  .blog-single-content-container {
+    padding: 1.5rem 1rem 4rem;
+  }
+
+  .blog-single-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2.75rem;
+  }
+
+  .blog-main-col,
+  .blog-sidebar-col {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Quote Format Highlight */
+  .blog-quote-highlight {
+    padding: 1.35rem 1.15rem;
+    margin-bottom: 2rem;
+    border-left-width: 3px;
+  }
+
+  .blog-quote-icon {
+    font-size: 2.25rem;
+    top: 6px;
+    right: 12px;
+    opacity: 0.2;
+  }
+
+  .blog-quote-text {
+    font-size: 1rem;
+    line-height: 1.45;
+    letter-spacing: 0.04em;
+    padding-right: 1.25rem;
+  }
+
+  .blog-quote-author {
+    font-size: 0.72rem;
+  }
+
+  /* Article Cover */
+  .blog-cover-wrapper {
+    margin-bottom: 2rem;
+  }
+
+  .blog-article-cover {
+    max-height: 280px;
+    border-radius: 8px;
+  }
+
+  /* Article Typography & Prose */
+  .blog-prose {
+    font-size: 0.92rem;
+    line-height: 1.8;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .blog-prose h2 {
+    font-size: 1.15rem;
+    letter-spacing: 0.08em;
+    margin: 2rem 0 1rem;
+  }
+
+  .blog-prose h3 {
+    font-size: 0.98rem;
+    letter-spacing: 0.06em;
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  .blog-prose blockquote {
+    padding: 1rem 1.15rem;
+    margin: 1.5rem 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* Elementor Galleries: Stack cleanly 100% width on phones */
+  .blog-prose .elementor-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+    margin: 1.25rem 0 !important;
+  }
+
+  .blog-prose .elementor-column.elementor-col-33,
+  .blog-prose .elementor-column.elementor-col-50 {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Booking Callout */
+  .blog-booking-callout {
+    margin: 2.5rem 0 1.75rem;
+    padding: 1.35rem 1.15rem;
+    border-radius: 12px;
+  }
+
+  .blog-booking-callout h3 {
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+  }
+
+  .blog-booking-callout p {
+    font-size: 0.8rem;
+    line-height: 1.6;
+  }
+
+  .blog-booking-cta-btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 0.8rem 1rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+  }
+
+  /* Single Navigation */
+  .blog-single-navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+    padding-top: 1.5rem;
+  }
+
+  .blog-nav-link {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.85rem 1rem;
+  }
+
+  .blog-nav-spacer {
+    display: none;
+  }
+
+  .blog-nav-title {
+    font-size: 0.76rem;
+  }
+
+  /* Comments Form */
+  .blog-comments-section {
+    margin-top: 2.5rem;
+    padding-top: 1.75rem;
+  }
+
+  .blog-comments-title {
+    font-size: 0.95rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 1.15rem;
+  }
+
+  .blog-comment-fields-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .blog-comment-submit-btn {
+    width: 100%;
+    text-align: center;
+    padding: 0.85rem 1rem;
+    box-sizing: border-box;
+  }
+
+  /* Sidebar Widgets on Mobile */
+  .blog-sidebar-col {
+    gap: 1.5rem;
+  }
+
+  .blog-sidebar-widget {
+    padding: 1.25rem 1.1rem;
+  }
+
+  .blog-widget-heading {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+  }
+
+  .blog-top-article-title {
+    font-size: 0.75rem;
+  }
+
+  .blog-promo-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+  }
+
+  /* Footer */
   .blog-footer-bar {
-    padding: 0.9rem 1.25rem;
+    padding: 0.9rem 1.15rem;
   }
 
   .blog-footer-tagline {
     display: none;
   }
 
-  .blog-cards-grid {
-    grid-template-columns: 1fr;
+  .blog-footer-copy {
+    font-size: 0.56rem;
   }
 }
+

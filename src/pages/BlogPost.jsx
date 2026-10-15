@@ -133,7 +133,7 @@ export default function BlogPost() {
         <Link to="/" className="blog-header-brand" aria-label="Go to home">
           <img src="/logo.png" alt={SITE_NAME} className="blog-header-logo" />
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+        <div className="blog-header-nav-group">
           <Link to="/blog" className="blog-header-nav-link">
             <span>←</span>
             <span>BLOG HUB</span>
