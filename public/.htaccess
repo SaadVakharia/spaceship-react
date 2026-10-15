@@ -2,11 +2,16 @@
   RewriteEngine On
   RewriteBase /
 
-  # Do not rewrite existing files or directories (like booking.php, assets, images)
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
+  # Disable directory listing
+  Options -Indexes
+
+  # Seamlessly rewrite requests for old blog image paths to blog-images
+  RewriteRule ^blog/(.+\.(jpe?g|png|webp|gif|svg|ico))$ /blog-images/$1 [L,NC]
+
+  # Serve existing physical files directly (assets, images, booking.php, robots.txt, sitemap.xml)
+  RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
-  # Route all other requests to index.html for React SPA routing
+  # Route all other URLs (including /blog and /blog/*) to index.html for React Router
   RewriteRule ^ index.html [L]
 </IfModule>

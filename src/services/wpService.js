@@ -4,19 +4,31 @@
  * to avoid CORS errors in both local dev and production.
  */
 
-const API_PATH = '/wp-json/wp/v2'
-const FALLBACK_HOST = 'https://old.escapegamingzone.com/wp-json/wp/v2'
+const WP_API_HOST = 'https://old.escapegamingzone.com/wp-json/wp/v2'
 
 async function wpFetch(endpoint) {
+  // In local Vite development, /wp-json is proxied. In production on Hostinger, fetch directly from old.escapegamingzone.com (which has CORS enabled)
+  const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  const primaryUrl = isLocal ? `/wp-json/wp/v2${endpoint}` : `${WP_API_HOST}${endpoint}`
+
   try {
-    // First try the relative proxy path (avoids CORS)
-    const res = await fetch(`${API_PATH}${endpoint}`)
-    if (res.ok) return res
+    const res = await fetch(primaryUrl)
+    const contentType = res.headers.get('content-type') || ''
+    if (res.ok && contentType.includes('application/json')) {
+      return res
+    }
   } catch (err) {
-    console.warn('Proxy fetch failed, attempting direct fetch:', err)
+    console.warn(`Primary fetch to ${primaryUrl} failed:`, err)
   }
-  // Fallback to direct URL if proxy is unavailable
-  return fetch(`${FALLBACK_HOST}${endpoint}`)
+
+  // Fallback to direct WordPress endpoint if primary returned HTML or failed
+  const directUrl = `${WP_API_HOST}${endpoint}`
+  const directRes = await fetch(directUrl)
+  const directContentType = directRes.headers.get('content-type') || ''
+  if (!directRes.ok || !directContentType.includes('application/json')) {
+    throw new Error(`WordPress API returned status ${directRes.status} (${directContentType || 'non-JSON'})`)
+  }
+  return directRes
 }
 
 export function stripHtml(html = '') {

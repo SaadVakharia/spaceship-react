@@ -8,22 +8,22 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://escapegamingzone.com/blog/esports-arena.jpg</image:loc>
+      <image:loc>https://escapegamingzone.com/blog-images/esports-arena.jpg</image:loc>
       <image:title>Escape Gaming Zone - PC Esports Arena Bandra Mumbai</image:title>
       <image:caption>High-performance 240Hz PC esports stations for competitive gaming in Bandra West</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://escapegamingzone.com/blog/ps5-lounge.jpg</image:loc>
+      <image:loc>https://escapegamingzone.com/blog-images/ps5-lounge.jpg</image:loc>
       <image:title>PlayStation 5 (PS5) 4K Gaming Lounge Mumbai</image:title>
       <image:caption>Comfortable 4K HDR PS5 gaming setups for multiplayer parties and tournaments</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://escapegamingzone.com/blog/vr-racing.jpg</image:loc>
+      <image:loc>https://escapegamingzone.com/blog-images/vr-racing.jpg</image:loc>
       <image:title>VR Racing Simulator Cockpits Bandra</image:title>
       <image:caption>Force-feedback steering wheel and pedal racing rigs with virtual reality</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://escapegamingzone.com/blog/party-tournament.jpg</image:loc>
+      <image:loc>https://escapegamingzone.com/blog-images/party-tournament.jpg</image:loc>
       <image:title>Gaming Birthday Parties &amp; LAN Tournaments Bandra</image:title>
       <image:caption>Group party bookings and private esports tournament venue in Bandra Mumbai</image:caption>
     </image:image>
@@ -44,7 +44,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://escapegamingzone.com/blog/starcraft-tournament.jpg</image:loc>
+      <image:loc>https://escapegamingzone.com/blog-images/starcraft-tournament.jpg</image:loc>
       <image:title>Starcraft Tournament at Escape Gaming Zone</image:title>
     </image:image>
   </url>
@@ -54,7 +54,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://escapegamingzone.com/blog/demon-cleaner.jpg</image:loc>
+      <image:loc>https://escapegamingzone.com/blog-images/demon-cleaner.jpg</image:loc>
       <image:title>Demon Cleaner Transmission - Escape Gaming</image:title>
     </image:image>
   </url>
@@ -64,7 +64,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://escapegamingzone.com/blog/dota-madness.jpg</image:loc>
+      <image:loc>https://escapegamingzone.com/blog-images/dota-madness.jpg</image:loc>
       <image:title>Dota Madness Tournament - Escape Gaming Zone</image:title>
     </image:image>
   </url>
@@ -74,7 +74,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://escapegamingzone.com/blog/dagon-shrine.jpg</image:loc>
+      <image:loc>https://escapegamingzone.com/blog-images/dagon-shrine.jpg</image:loc>
       <image:title>Dagon Shrine Transmission - Escape Gaming Zone</image:title>
     </image:image>
   </url>
