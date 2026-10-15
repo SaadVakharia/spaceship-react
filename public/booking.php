@@ -2,7 +2,7 @@
 // booking.php - Backend PHP proxy & email dispatcher for Hostinger
 
 // 1. BitForm API Configuration
-$api_key = "[ENCRYPTION_KEY]";
+$api_key = "ccksweeeed71iwiic2iptsjp1506i9y1e5cdre";
 $form_id = "1";
 $bitform_endpoint = "https://old.escapegamingzone.com/wp-json/bitform/v1/entry/" . $form_id;
 
@@ -54,63 +54,23 @@ $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $error = curl_error($ch);
 curl_close($ch);
 
-// 6. Direct Email Notification (Sent directly by Hostinger's PHP mail)
-// You can add your own email here separated by a comma if you want a copy (e.g. "escapegamingbandra@gmail.com, your@email.com")
-$to_email = "escapegamingbandra@gmail.com";
-
-$customer_name = !empty($data['name']) ? strip_tags($data['name']) : "Customer";
-$customer_phone = !empty($data['phone']) ? strip_tags($data['phone']) : "N/A";
-$customer_email = !empty($data['email']) ? filter_var($data['email'], FILTER_SANITIZE_EMAIL) : "";
-$experience_booked = !empty($data['experience']) ? strip_tags($data['experience']) : "General";
-$user_notes = !empty($data['message']) ? nl2br(htmlspecialchars($data['message'])) : "No notes provided";
-
-$subject = "🎮 New Booking: " . $experience_booked . " - " . $customer_name;
-$email_html = "
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #0f111a; color: #ffffff; padding: 20px; }
-    .card { background: #1a1d2e; padding: 25px; border-radius: 12px; max-width: 550px; margin: 0 auto; border: 1px solid #2a2e45; }
-    h2 { color: #00f0ff; margin-top: 0; border-bottom: 2px solid #ff0055; padding-bottom: 10px; font-size: 22px; }
-    .item { margin-bottom: 12px; font-size: 15px; color: #e0e0e0; }
-    .label { font-weight: bold; color: #9aa0b6; display: inline-block; width: 140px; }
-    .val { color: #ffffff; }
-    .val a { color: #00f0ff; text-decoration: none; }
-    .msg-box { background: #121422; border-left: 3px solid #ff0055; padding: 12px; margin-top: 8px; border-radius: 4px; color: #fff; line-height: 1.5; }
-    .footer { font-size: 12px; color: #666; margin-top: 20px; text-align: center; }
-  </style>
-</head>
-<body>
-  <div class='card'>
-    <h2>🎮 New Booking Request</h2>
-    <div class='item'><span class='label'>Name:</span> <span class='val'>" . htmlspecialchars($customer_name) . "</span></div>
-    <div class='item'><span class='label'>Phone:</span> <span class='val'><a href='tel:" . htmlspecialchars($customer_phone) . "'>" . htmlspecialchars($customer_phone) . "</a></span></div>
-    <div class='item'><span class='label'>Email:</span> <span class='val'><a href='mailto:" . htmlspecialchars($customer_email) . "'>" . htmlspecialchars($customer_email) . "</a></span></div>
-    <div class='item'><span class='label'>Experience:</span> <span class='val'><strong>" . htmlspecialchars($experience_booked) . "</strong></span></div>
-    <div class='item'><span class='label'>Submission Time:</span> <span class='val'>" . htmlspecialchars($timestamp) . "</span></div>
-    <div class='item'>
-      <span class='label'>Notes / Message:</span>
-      <div class='msg-box'>" . $user_notes . "</div>
-    </div>
-    <div class='footer'>Sent from Escape Gaming Zone Website</div>
-  </div>
-</body>
-</html>
-";
-
-$domain = $_SERVER['SERVER_NAME'] ?? 'escapegamingzone.com';
-$headers = [
-  'MIME-Version: 1.0',
-  'Content-type: text/html; charset=UTF-8',
-  'From: Escape Gaming Zone <bookings@' . $domain . '>',
-  'X-Mailer: PHP/' . phpversion()
-];
-if (!empty($customer_email)) {
-  $headers[] = 'Reply-To: ' . $customer_email;
-}
-
-@mail($to_email, $subject, $email_html, implode("\r\n", $headers));
+// 6. Send Email Notification via WordPress & WP Mail SMTP
+$wp_mail_endpoint = "https://old.escapegamingzone.com/wp-json/escape/v1/book";
+$ch_mail = curl_init($wp_mail_endpoint);
+curl_setopt($ch_mail, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch_mail, CURLOPT_POST, true);
+curl_setopt($ch_mail, CURLOPT_POSTFIELDS, json_encode([
+  "name" => !empty($data['name']) ? $data['name'] : 'Customer',
+  "phone" => !empty($data['phone']) ? $data['phone'] : 'N/A',
+  "email" => !empty($data['email']) ? $data['email'] : '',
+  "experience" => !empty($data['experience']) ? $data['experience'] : 'General',
+  "message" => $message_with_time
+]));
+curl_setopt($ch_mail, CURLOPT_HTTPHEADER, [
+  "Content-Type: application/json"
+]);
+$mail_response = curl_exec($ch_mail);
+curl_close($ch_mail);
 
 // 7. Return JSON response to frontend
 http_response_code($httpcode ?: 200);

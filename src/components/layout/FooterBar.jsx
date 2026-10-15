@@ -1,7 +1,8 @@
+import { Link } from 'react-router-dom'
 import { PLANETS_START } from '../../config/scroll'
 import '../../styles/footer.css'
 
-const SOCIALS = [
+export const SOCIALS = [
   {
     label: 'Instagram',
     href: 'https://www.instagram.com/escape.gaming.co/',
@@ -50,9 +51,9 @@ export function FooterBar({ scrollProgress }) {
         © {new Date().getFullYear()} Escape Gaming · Bandra, Mumbai
       </span>
 
-      {/* Center — tagline */}
+      {/* Center — tagline & blog */}
       <span className="site-footer__tagline">
-        BANDRA'S PREMIER GAMING ZONE
+        BANDRA'S PREMIER GAMING ZONE · <Link to="/blog" className="site-footer__blog-link">BLOG</Link>
       </span>
 
       {/* Right — socials */}

@@ -41,3 +41,9 @@ coverage/
 # System Files
 .DS_Store
 Thumbs.db
+
+# Graphify Output
+graphify-out/
+
+# Standalone booking management app
+booking-app/

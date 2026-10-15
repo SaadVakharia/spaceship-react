@@ -42,8 +42,25 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  pointer-events: none;
   white-space: nowrap;
+}
+
+.site-footer__blog-link {
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.site-footer__blog-link:hover {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* ─── Social links ────────────────────────────────────────────────────────── */

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { SITE_NAME } from '../../config/brand'
 import { PLANETS_START } from '../../config/scroll'
 import '../../styles/layout.css'
@@ -51,6 +52,12 @@ export function Header({ scrollProgress, scrollTo }) {
               {item.label}
             </button>
           ))}
+          <Link
+            to="/blog"
+            className="site-nav__link"
+          >
+            Blog
+          </Link>
         </nav>
       )}
 
@@ -80,6 +87,13 @@ export function Header({ scrollProgress, scrollTo }) {
               {item.label}
             </button>
           ))}
+          <Link
+            to="/blog"
+            className="site-nav__drawer-link"
+            onClick={() => setMenuOpen(false)}
+          >
+            Blog
+          </Link>
         </div>
       )}
     </header>

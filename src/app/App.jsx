@@ -1,3 +1,5 @@
+import { lazy, Suspense } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { useScrollProgress } from '../hooks/useScrollProgress'
 import {
   getBlackOverlayOpacity,
@@ -18,7 +20,10 @@ import {
   Scrollbar
 } from '../components/overlay'
 
-export default function App() {
+const BlogList = lazy(() => import('../pages/BlogList'))
+const BlogPost = lazy(() => import('../pages/BlogPost'))
+
+function MainExperience() {
   const { scrollProgress, scrollTo } = useScrollProgress()
 
   return (
@@ -42,5 +47,32 @@ export default function App() {
       <Scrollbar scrollProgress={scrollProgress} />
       <FooterBar scrollProgress={scrollProgress} />
     </AppShell>
+  )
+}
+
+export default function App() {
+  return (
+    <Suspense fallback={
+      <div style={{
+        height: '100vh',
+        width: '100vw',
+        background: '#05060b',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'Space Grotesk, sans-serif',
+        color: '#c4b5fd',
+        letterSpacing: '0.1em'
+      }}>
+        LOADING...
+      </div>
+    }>
+      <Routes>
+        <Route path="/" element={<MainExperience />} />
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Suspense>
   )
 }

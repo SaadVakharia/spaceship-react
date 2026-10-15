@@ -24,6 +24,11 @@
   <meta name="twitter:description"
     content="Gaming zone in Bandra offering PS5, VR &amp; PC games. Visit the best escape gaming zone near me Bandra for thrilling gameplay &amp; ultimate fun with friends." />
 
+  <meta name="geo.region" content="IN-MH" />
+  <meta name="geo.placename" content="Bandra West, Mumbai" />
+  <meta name="geo.position" content="19.0596;72.8295" />
+  <meta name="ICBM" content="19.0596, 72.8295" />
+
   <link rel="icon" type="image/png" href="/logo.png" />
 
   <script type="application/ld+json">
@@ -31,39 +36,90 @@
       "@context": "https://schema.org",
       "@graph": [
         {
-          "@type": "Place",
-          "@id": "https://escapegamingzone.com/#place",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "3rd floor, 304, Bandra Commercial Wing, Sayba Emrald Building,",
-            "addressRegion": "Mumbai",
-            "postalCode": "400050",
-            "addressCountry": "India",
-            "addressLocality": "Station Rd, near Bandra Bus Depot"
-          }
-        },
-        {
-          "@type": "Organization",
+          "@type": ["EntertainmentBusiness", "SportsActivityLocation"],
           "@id": "https://escapegamingzone.com/#organization",
           "name": "Escape Gaming Zone",
+          "alternateName": ["Escape Gaming", "Gaming Zone Bandra", "Escape Gaming Zone Mumbai"],
           "url": "https://escapegamingzone.com",
-          "sameAs": ["https://www.facebook.com/escapegamingzone"],
+          "logo": "https://escapegamingzone.com/logo.png",
+          "image": "https://escapegamingzone.com/blog/esports-arena.jpg",
+          "telephone": "+919167862341",
+          "priceRange": "₹₹",
+          "currenciesAccepted": "INR",
+          "paymentAccepted": "Cash, Credit Card, Debit Card, UPI, Google Pay, PhonePe",
           "address": {
             "@type": "PostalAddress",
-            "streetAddress": "3rd floor, 304, Bandra Commercial Wing, Sayba Emrald Building,",
-            "addressRegion": "Mumbai",
+            "streetAddress": "3rd floor, 304, Bandra Commercial Wing, Sayba Emerald Building, Station Rd, near Bandra Bus Depot",
+            "addressLocality": "Bandra West",
+            "addressRegion": "Mumbai, Maharashtra",
             "postalCode": "400050",
-            "addressCountry": "India",
-            "addressLocality": "Station Rd, near Bandra Bus Depot"
+            "addressCountry": "IN"
           },
-          "contactPoint": [
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 19.0596,
+            "longitude": 72.8295
+          },
+          "hasMap": "https://maps.app.goo.gl/wcyzCkLW1Fjf8gE6A",
+          "openingHoursSpecification": [
             {
-              "@type": "ContactPoint",
-              "telephone": "+919167862341",
-              "contactType": "customer support"
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "opens": "11:00",
+              "closes": "23:00"
             }
           ],
-          "description": "Step in to the world of extreme gaming at Escape Gaming Zone in Bandra home to the best PS5 gaming and VR zones in Mumbai. For both casual and serious gamers we’ve got what it takes to elevate your play. We feature the latest in consoles, high end PCs and also very impressive VR setups that will give you pure adrenalin and fun."
+          "sameAs": [
+            "https://www.instagram.com/escape.gaming.co/",
+            "https://www.facebook.com/escapegamingzone"
+          ],
+          "description": "Step into extreme gaming at Escape Gaming Zone in Bandra West, Mumbai. Featuring 4K HDR PS5 lounges, ultra-realistic VR racing simulators, and high-performance RTX Esports PCs running at 240Hz for casual and competitive gamers."
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://escapegamingzone.com/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Where is Escape Gaming Zone located in Bandra, Mumbai?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Escape Gaming Zone is located at 3rd Floor, 304, Bandra Commercial Wing, Sayba Emerald Building, Station Rd, near Bandra Bus Depot, Bandra West, Mumbai 400050. It is conveniently situated within 2 minutes from Bandra Railway Station."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What gaming experiences are available at Escape Gaming Zone?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We offer Sony PlayStation 5 (PS5) lounges with 4K HDR displays, immersive VR gaming and force-feedback racing simulator rigs, and high-spec PC Esports stations powered by RTX graphics and 240Hz monitors for competitive games like Valorant, CS2, and Dota 2."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What are the timings and hourly rates for Escape Gaming Zone Bandra?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We are open 7 days a week from 11:00 AM to 11:00 PM. We offer affordable hourly rates and gaming packages for PS5, VR, Racing Simulators, and PC setups. Call or WhatsApp +91 91678 62341 for current hourly pricing and group passes."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can we host birthday parties, LAN tournaments, and private events?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! Escape Gaming Zone accommodates private party bookings, birthday celebrations, corporate gaming nights, and community esports tournaments with dedicated lounge seating, snack facilities, and full venue buyout options."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do I need to book in advance or can I walk in?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Walk-ins are always welcome. However, advance booking via phone or WhatsApp at +91 91678 62341 is strongly recommended on weekends and evenings to reserve your preferred PS5 couch, VR rig, or PC esports stations without waiting."
+              }
+            }
+          ]
         },
         {
           "@type": "WebSite",
@@ -94,7 +150,49 @@
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <!-- Pre-rendered semantic snapshot for SEO crawlers (Replaced dynamically when React mounts) -->
+    <header style="display:none;" aria-hidden="true">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/blog">Blog &amp; Transmissions</a>
+      </nav>
+    </header>
+    <main style="display:none;" aria-hidden="true">
+      <h1>Best Gaming Zone in Bandra West, Mumbai — Escape Gaming Zone</h1>
+      <p>Escape Gaming Zone is Bandra's premier gaming lounge offering PS5 4K gaming, VR racing simulators, and high-FPS PC esports arena setups.</p>
+      
+      <section>
+        <h2>PlayStation 5 (PS5) Gaming Lounge</h2>
+        <p>Experience latest multiplayer games including EA Sports FC 24, Mortal Kombat 1, Spider-Man 2, WWE 2K, and Tekken 8 on crisp 4K HDR displays with comfortable lounge seating.</p>
+      </section>
+
+      <section>
+        <h2>VR Racing Simulators &amp; Virtual Reality</h2>
+        <p>Immerse yourself in precision racing cockpit rigs with force feedback steering wheels, pedal sets, and virtual reality headsets for high-speed thrills.</p>
+      </section>
+
+      <section>
+        <h2>High-End PC Esports Arena</h2>
+        <p>Competitive PC gaming stations equipped with high-refresh 240Hz monitors, mechanical gaming keyboards, ergonomic seating, and RTX graphics for Valorant, Counter-Strike 2, Dota 2, and Apex Legends.</p>
+      </section>
+
+      <section>
+        <h2>Location &amp; Contact Information</h2>
+        <p>Address: 3rd Floor, 304, Sayba Emerald Building, Bandra Commercial Wing, Station Rd, near Bandra Bus Depot, Bandra West, Mumbai, Maharashtra 400050.</p>
+        <p>Phone / WhatsApp: <a href="tel:+919167862341">+91 91678 62341</a></p>
+        <p>Hours: Open Daily 11:00 AM – 11:00 PM</p>
+      </section>
+    </main>
+  </div>
+  <noscript>
+    <div style="background:#05060b; color:#fff; padding:2rem; font-family:sans-serif; text-align:center;">
+      <h1>Escape Gaming Zone · Bandra West, Mumbai</h1>
+      <p>Premier gaming destination featuring PS5, VR Racing Simulators, and PC Esports. Open daily 11 AM - 11 PM.</p>
+      <p>Call or WhatsApp for bookings: <a href="tel:+919167862341" style="color:#c4b5fd;">+91 91678 62341</a></p>
+      <p><a href="/blog" style="color:#c4b5fd;">Read our Gaming Blog &amp; Updates</a></p>
+    </div>
+  </noscript>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 
